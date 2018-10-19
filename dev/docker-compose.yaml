@@ -1,0 +1,61 @@
+version: '3.0'
+services:
+  magento-test:
+    image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
+    ports:
+      - "8887:80"
+    links:
+      - db
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=magento1_test
+      - MAGENTO_URL=http://magento1-test.local
+    volumes:
+      - ./..:/app/code/local/Emartech/EmarsysMagento1Extension
+    command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
+  magento-dev:
+    image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
+    ports:
+      - "8886:80"
+    links:
+      - db
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=magento1_dev
+      - MAGENTO_URL=http://magento1-dev.local:8886
+    volumes:
+      - ./../Emartech_EmarsysMagento1Extension.xml:/app/app/etc/modules/Emartech_EmarsysMagento1Extension.xml
+      - ./..:/app/code/local/Emartech/EmarsysMagento1Extension
+      - ./setup:/opt/emartech/setup
+    command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
+  db:
+    image: healthcheck/percona
+    restart: always
+    volumes:
+      - magento1-db:/var/lib/mysql
+    ports:
+      - "13307:3306"
+    env_file:
+      - .env
+  node:
+    container_name: mage_node
+    build:
+      context: .
+      dockerfile: ./Docker/Dockerfile-node
+      args:
+        - NPM_TOKEN=$NPM_TOKEN
+    volumes:
+      - ./test:/test
+    ipc: host
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=magento_test
+      - MAGENTO_URL=magento1-test.local
+    links:
+      - magento-test:magento1-test.local
+      - db
+volumes:
+  magento1-db:
