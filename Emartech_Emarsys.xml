@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <config>
   <modules>
-    <Emartech_EmarsysMagento1Extension>
+    <Emartech_Emarsys>
       <active>true</active>
       <codePool>local</codePool>
-    </Emartech_EmarsysMagento1Extension>
+    </Emartech_Emarsys>
   </modules>
 </config>

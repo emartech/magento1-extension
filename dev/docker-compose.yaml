@@ -10,9 +10,11 @@ services:
       - .env
     environment:
       - MYSQL_DATABASE=magento1_test
-      - MAGENTO_URL=http://magento1-test.local
+      - MAGENTO_URL=http://magento1-test.local/
     volumes:
-      - ./..:/app/code/local/Emartech/EmarsysMagento1Extension
+      - ./../Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
+      - ./..:/app/code/local/Emartech/Emarsys
+      - ./setup:/opt/emartech/setup
     command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
   magento-dev:
     image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
@@ -24,10 +26,10 @@ services:
       - .env
     environment:
       - MYSQL_DATABASE=magento1_dev
-      - MAGENTO_URL=http://magento1-dev.local:8886
+      - MAGENTO_URL=http://magento1-dev.local:8886/
     volumes:
-      - ./../Emartech_EmarsysMagento1Extension.xml:/app/app/etc/modules/Emartech_EmarsysMagento1Extension.xml
-      - ./..:/app/code/local/Emartech/EmarsysMagento1Extension
+      - ./../Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
+      - ./..:/app/code/local/Emartech/Emarsys
       - ./setup:/opt/emartech/setup
     command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
   db:
@@ -40,7 +42,6 @@ services:
     env_file:
       - .env
   node:
-    container_name: mage_node
     build:
       context: .
       dockerfile: ./Docker/Dockerfile-node

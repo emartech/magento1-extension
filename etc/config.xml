@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <config>
   <modules>
-    <Emartech_EmarsysMagento1Extension>
-      <version>0.1.0</version>      <!-- Version number of your module -->
-    </Emartech_EmarsysMagento1Extension>
+    <Emartech_Emarsys>
+      <version>1.0.0</version>      <!-- Version number of your module -->
+    </Emartech_Emarsys>
   </modules>
   <frontend>
     <routers>
       <emarsys>
         <use>standard</use>
         <args>
-          <module>Emartech_EmarsysMagento1Extension</module>
+          <module>Emartech_Emarsys</module>
           <frontName>emarsys</frontName>
         </args>
       </emarsys>
