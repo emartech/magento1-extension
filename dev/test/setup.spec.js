@@ -107,15 +107,14 @@ before(async function() {
   const result = await this.db
     .select('value')
     .from('core_config_data')
-    .where({ path: 'web/unsecure/base_url' })
+    .where({ path: 'emartech_emarsys/general/connecttoken' })
     .first();
-  console.log(result);
-  // const { hostname, token } = JSON.parse(Buffer.from(result.value, 'base64'));
-  // this.hostname = hostname;
-  // this.token = token;
-  // console.log('host', hostname);
-  // console.log('Token: ' + token);
-  //
+  const { hostname, token } = JSON.parse(Buffer.from(result.value, 'base64'));
+  this.hostname = hostname;
+  this.token = token;
+  console.log('host', hostname);
+  console.log('Token: ' + token);
+
   // this.magentoApi = new Magento2ApiClient({
   //   baseUrl: `http://${this.hostname}`,
   //   token: this.token
@@ -208,5 +207,5 @@ beforeEach(async function() {
 
 afterEach(async function() {
   this.sandbox.restore();
-  await this.dbCleaner.resetEmarsysEventsData();
+  // await this.dbCleaner.resetEmarsysEventsData();
 });
