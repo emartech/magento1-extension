@@ -13,7 +13,7 @@ services:
       - MAGENTO_URL=http://magento1-test.local/
     volumes:
       - ./../Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
-      - ./..:/app/code/local/Emartech/Emarsys
+      - ./..:/app/app/code/local/Emartech/Emarsys
       - ./setup:/opt/emartech/setup
     command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
   magento-dev:
@@ -29,7 +29,7 @@ services:
       - MAGENTO_URL=http://magento1-dev.local:8886/
     volumes:
       - ./../Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
-      - ./..:/app/code/local/Emartech/Emarsys
+      - ./..:/app/app/code/local/Emartech/Emarsys
       - ./setup:/opt/emartech/setup
     command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
   db:
