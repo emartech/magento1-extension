@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Marketing Events', function() {
+describe.skip('Marketing Events', function() {
   const changeCredentials = (customer, { password, email }) => {
     cy.visit('/index.php/customer/account/edit/');
 

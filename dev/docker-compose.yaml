@@ -53,7 +53,7 @@ services:
     env_file:
       - .env
     environment:
-      - MYSQL_DATABASE=magento_test
+      - MYSQL_DATABASE=magento1_test
       - MAGENTO_URL=magento1-test.local
     links:
       - magento-test:magento1-test.local

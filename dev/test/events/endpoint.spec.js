@@ -33,7 +33,7 @@ const customers = [
   }
 ];
 
-describe('Events API endpoint', function() {
+describe.skip('Events API endpoint', function() {
   afterEach(async function() {
     await this.db.raw(
       'DELETE FROM customer_entity where email in ("yolo@yolo.net", "doggo@yolo.net", "pupper@yolo.net")'

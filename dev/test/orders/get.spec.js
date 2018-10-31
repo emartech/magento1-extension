@@ -84,7 +84,7 @@ const createNewCustomerOrder = async (magentoApi, customer) => {
 
 const orderCount = 8;
 
-describe('Orders endpoint', function() {
+describe.skip('Orders endpoint', function() {
   before(async function() {
     await this.dbCleaner.clearOrders();
     for (let orderNumber = 0; orderCount > orderNumber; orderNumber++) {

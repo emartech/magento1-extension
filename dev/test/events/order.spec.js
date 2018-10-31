@@ -105,7 +105,7 @@ const cancelOrder = async (magentoApi, orderId) => {
   });
 };
 
-describe('Order events', function() {
+describe.skip('Order events', function() {
   context('setting enabled', function() {
     before(async function() {
       await this.magentoApi.setConfig({

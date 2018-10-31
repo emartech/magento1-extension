@@ -26,7 +26,7 @@ const resetPasswordResetRequestEvent = async db => {
   return await db.truncate('password_reset_request_event');
 };
 
-describe('Marketing events: customer', function() {
+describe.skip('Marketing events: customer', function() {
   afterEach(async function() {
     await resetPasswordResetRequestEvent(this.db);
     await this.db.raw('DELETE FROM customer_entity where email = "yolo@yolo.net"');

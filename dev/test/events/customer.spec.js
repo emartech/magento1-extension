@@ -11,7 +11,7 @@ const customer = {
   disable_auto_group_change: 0
 };
 
-describe('Customer events', function() {
+describe.skip('Customer events', function() {
   afterEach(async function() {
     await this.db.raw('DELETE FROM customer_entity where email = "yolo99@yolo.net"');
     await this.magentoApi.setDefaultConfig(1);

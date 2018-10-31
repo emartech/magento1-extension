@@ -2,16 +2,15 @@ db:
   image: healthcheck/percona
   cached: true
   encrypted_env_file: codeship.env.encrypted
-magento-test.local:
-  image: eu.gcr.io/ems-plugins/magento-sampledata:2.2.5
-  container_name: magento-test.local
+magento1-test.local:
+  image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
+  container_name: magento1-test.local
   depends_on:
     - db
   volumes:
-    - ./dev/Magento/composer.json:/app/composer.json
+    - ./dev/Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
+    - ./:/app/app/code/local/Emartech/Emarsys
     - ./dev/setup:/opt/emartech/setup
-    - .:/app/vendor/emartech/emarsys-magento2-extension
-    - ./dev/cache-flush.php:/app/cache-flush.php
   cached: true
   encrypted_env_file: codeship.env.encrypted
   dockercfg_service: dockercfg-generator
@@ -20,11 +19,12 @@ dockercfg-generator:
   add_docker: true
   encrypted_env_file: codeship.env.encrypted
 magento-static:
-  image: eu.gcr.io/ems-plugins/magento-sampledata:2.2.5
+  image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
   container_name: magento-static
   volumes:
+    - ./dev/Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
+    - ./:/app/app/code/local/Emartech/Emarsys
     - ./dev/setup:/opt/emartech/setup
-    - .:/app/vendor/emartech/emarsys-magento2-extension
   cached: true
   encrypted_env_file: codeship.env.encrypted
   dockercfg_service: dockercfg-generator
@@ -42,7 +42,7 @@ node:
     - ./dev/test:/test
   depends_on:
     - db
-    - magento-test.local
+    - magento1-test.local
   cached: true
   encrypted_env_file: codeship.env.encrypted
 deployment:

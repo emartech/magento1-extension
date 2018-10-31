@@ -11,7 +11,7 @@ const getEmarsysSnippetContents = async path => {
     .replace(/(?:\r\n|\r|\n)/g, '');
 };
 
-describe('Webextend scripts', function() {
+describe.skip('Webextend scripts', function() {
   describe('enabled', function() {
     beforeEach(async function() {
       await this.magentoApi.setConfig({

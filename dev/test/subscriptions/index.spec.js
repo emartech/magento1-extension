@@ -21,7 +21,7 @@ const customerId = 1;
 const websiteId = 1;
 const storeId = 1;
 
-describe('Subscriptions api', function() {
+describe.skip('Subscriptions api', function() {
   let subscriptionFor;
 
   before(function() {

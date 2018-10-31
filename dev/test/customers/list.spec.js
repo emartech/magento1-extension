@@ -23,7 +23,7 @@ const customers = [
   }
 ];
 
-describe('Customers endpoint', function() {
+describe.skip('Customers endpoint', function() {
   before(async function() {
     for (const customer of customers) {
       await this.createCustomer(customer);

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Marketing Events', function() {
+describe.skip('Marketing Events', function() {
   const unsubscribe = (email) => {
     cy.task('getSubscription', email).then((subscription) => {
       cy.visit(`/newsletter/subscriber/unsubscribe?id=${subscription.subscriber_id}\

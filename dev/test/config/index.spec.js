@@ -19,7 +19,7 @@ const dbKeys = {
 };
 
 const scopeId = 1;
-describe('Config endpoint', function() {
+describe.skip('Config endpoint', function() {
   afterEach(async function() {
     await this.magentoApi.setDefaultConfig(1);
   });

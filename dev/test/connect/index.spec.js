@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Connect', function() {
+describe.skip('Connect', function() {
   it('should store hostname, token', async function() {
     const result = await this.db
       .select('value')

@@ -10,7 +10,7 @@ const getDbConnectionConfig = () => {
       port: 13306,
       user: 'magento',
       password: 'magento',
-      database: 'magento_test'
+      database: 'magento1_test'
     };
   }
   return {
@@ -46,7 +46,7 @@ const getMagentoApi = async () => {
   const token = await getMagentoToken();
 
   return new Magento2ApiClient({
-    baseUrl: process.env.CYPRESS_baseUrl || 'http://magento-test.local',
+    baseUrl: process.env.CYPRESS_baseUrl || 'http://magento1-test.local',
     token
   });
 };

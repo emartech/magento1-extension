@@ -182,7 +182,7 @@ const expectCustomerAndOrderMatches = function(createdEventData, customer) {
   expectOrderMatches(createdEventData);
 };
 
-describe('Marketing events: sales', function() {
+describe.skip('Marketing events: sales', function() {
   after(async function() {
     await this.magentoApi.setConfig({
       websiteId: 1,

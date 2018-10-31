@@ -151,7 +151,7 @@ const buyItem = () => {
   });
 };
 
-describe('Web extend scripts', function() {
+describe.skip('Web extend scripts', function() {
   before(() => {
     cy.task('getDefaultCustomer').as('defaultCustomer');
   });
