@@ -11,8 +11,15 @@ require_once(Mage::getModuleDir('controllers', 'Emartech_Emarsys') . DS . 'Abstr
  */
 class Emartech_Emarsys_CustomersController extends Emartech_Emarsys_AbstractController
 {
-    public function handleData()
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    public function handleRequest($params)
     {
-        return [];
+        /* @var Emartech_Emarsys_Model_Customers $model */
+        $model = Mage::getModel('emartech_emarsys/customers');
+        return $model->handleRequest($params);
     }
 }
