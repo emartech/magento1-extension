@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Aion
+ * @package   Aion_Getsafeaddons
+ * @author    Sági Attila <sagi.attila@aion.hu>
+ * @copyright 2016 AionNext Kft. (http://www.aion.hu)
+ * @license   http://aion.hu/license Aion License
+ * @link      http://www.aion.hu
+ */
+-->
+<config>
+    <tabs>
+        <emartech_emarsys translate="label" module="emartech_emarsys">
+            <label><![CDATA[
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAMCAYAAABfnvydAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3JpZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgpMwidZAAABcklEQVQYGWNgAIH//xmNz6SxgtlQwuBSnb/xxbojLCCJs4yMv88yMPwGK2KViPrPwFDJLiuk/vfR2/+MIA26hysEWXnYUhiYGErY5YTE/j16+4+T4X//gd8CHYzGF+qb/zH/z2YV4xX8++Lze+7//7sOnfTvZUg3+f35BYMYo/nLnv//n35nYH7/e+Jx56YCkImPXjIof/ktVs/M9CWW0XpN7X7OB+wOf778ZmBl/7twQsw8LjHRd6Gc7BwMj58KHmU6GtLsyPz7h+snVsa9EmIc8Xz8fKHv34rufvHqg7WmzH0boBcbmEDGgkD+3Aab07cZDCE8Boa8tguxYF8Yp81kPTsr/TdE4j9Lbvu5wv//mSs5eMQFGUGBxMDI+D+r5bIsA+PffCCzgE9Ikfn9m4fvgEa3g00o7DvG+eMb9ysBEQWeD28e3PzP+L9L4jfrkoYG7V8sIGN//WDmYmBgPPj+zaO5M2r010OsYmBISzvDCgCzdJDHUGsRLAAAAABJRU5ErkJggg==" border="0" />
+            Emarsys]]></label>
+            <sort_order>500</sort_order>
+        </emartech_emarsys>
+    </tabs>
+    <sections>
+        <emartech_emarsys>
+            <class>separator-top</class>
+            <label>Connect</label>
+            <tab>emartech_emarsys</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>100</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>Connect token</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <connecttoken translate="label">
+                            <frontend_type>textarea</frontend_type>
+                            <frontend_model>emartech_emarsys/connecttoken_renderer</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Please copy this token and paste in at your Emarsys Integration page.</comment>
+                        </connecttoken>
+                    </fields>
+                </general>
+            </groups>
+        </emartech_emarsys>
+    </sections>
+</config>
