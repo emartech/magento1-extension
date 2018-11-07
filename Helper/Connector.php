@@ -11,6 +11,7 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
 {
     CONST XML_PATH_CONNECTOR_TOKEN = 'emartech_emarsys/general/connecttoken';
     const VALID_AUTHORIZATION_TYPE = 'Bearer';
+    const MAGENTO_VERSION = 1;
 
     /**
      * @return string
@@ -19,8 +20,9 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
     {
         $hostname = $this->_getBaseUrl();
         $token = $this->_generateApiToken();
+        $magento_version = self::MAGENTO_VERSION;
 
-        $connectJson = json_encode(compact('hostname', 'token'));
+        $connectJson = json_encode(compact('hostname', 'token', 'magento_version'));
         $connectToken = base64_encode($connectJson);
 
         return $connectToken;
@@ -54,8 +56,9 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
     public function getToken()
     {
         $returnArray = [
-            'hostname' => '',
-            'token'    => '',
+            'hostname'        => '',
+            'token'           => '',
+            'magento_version' => '',
         ];
 
         $token = Mage::getStoreConfig(self::XML_PATH_CONNECTOR_TOKEN);

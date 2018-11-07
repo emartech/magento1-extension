@@ -15,9 +15,9 @@ class Emartech_Emarsys_Model_System extends Emartech_Emarsys_Model_Abstract
     {
         return [
             'magento_version' => $this->_getMagentoVersion(),
-            'magento_edition'   => $this->_getMagentoEdition(),
-            'php_version'   => $this->_getPHPVersion(),
-            'module_version' => $this->_getModuleVersion(),
+            'magento_edition' => $this->_getMagentoEdition(),
+            'php_version'     => $this->_getPHPVersion(),
+            'module_version'  => $this->_getModuleVersion(),
         ];
     }
 

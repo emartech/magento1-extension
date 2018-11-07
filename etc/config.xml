@@ -2,14 +2,24 @@
 <config>
     <modules>
         <Emartech_Emarsys>
-            <version>1.0.1</version>      <!-- Version number of your module -->
+            <version>1.0.2</version>
         </Emartech_Emarsys>
     </modules>
     <global>
         <models>
             <emartech_emarsys>
                 <class>Emartech_Emarsys_Model</class>
+                <resourceModel>emartech_emarsys_resource</resourceModel>
             </emartech_emarsys>
+
+            <emartech_emarsys_resource>
+                <class>Emartech_Emarsys_Model_Resource</class>
+                <entities>
+                    <event>
+                        <table>emarsys_events_data</table>
+                    </event>
+                </entities>
+            </emartech_emarsys_resource>
         </models>
         <helpers>
             <emartech_emarsys>
@@ -29,6 +39,48 @@
                 </setup>
             </emartech_emarsys_setup>
         </resources>
+        <events>
+            <customer_save_commit_after>
+                <observers>
+                    <emarsys_customer_save_commit_after>
+                        <class>emartech_emarsys/observer_event</class>
+                        <method>customerSaveCommitAfter</method>
+                    </emarsys_customer_save_commit_after>
+                </observers>
+            </customer_save_commit_after>
+            <customer_address_save_commit_after>
+                <observers>
+                    <emarsys_customer_address_save_commit_after>
+                        <class>emartech_emarsys/observer_event</class>
+                        <method>customerAddressSaveCommitAfter</method>
+                    </emarsys_customer_address_save_commit_after>
+                </observers>
+            </customer_address_save_commit_after>
+            <newsletter_subscriber_save_after>
+                <observers>
+                    <emarsys_newsletter_subscriber_save_after>
+                        <class>emartech_emarsys/observer_event</class>
+                        <method>newsletterSubscriberSaveAfter</method>
+                    </emarsys_newsletter_subscriber_save_after>
+                </observers>
+            </newsletter_subscriber_save_after>
+            <newsletter_subscriber_delete_after>
+                <observers>
+                    <emarsys_newsletter_subscriber_delete_after>
+                        <class>emartech_emarsys/observer_event</class>
+                        <method>newsletterSubscriberSaveAfter</method>
+                    </emarsys_newsletter_subscriber_delete_after>
+                </observers>
+            </newsletter_subscriber_delete_after>
+            <sales_order_save_after>
+                <observers>
+                    <emarsys_sales_order_save_after>
+                        <class>emartech_emarsys/observer_event</class>
+                        <method>salesOrderSaveAfter</method>
+                    </emarsys_sales_order_save_after>
+                </observers>
+            </sales_order_save_after>
+        </events>
     </global>
     <frontend>
         <routers>

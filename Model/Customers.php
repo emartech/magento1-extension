@@ -82,8 +82,6 @@ class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract
             Mage::logException($e);
         }
 
-        //var_dump($this->_collection->getSelect().'');die();
-
         return [
             'current_page' => $this->_collection->getCurPage(),
             'last_page'    => $this->_collection->getLastPageNumber(),
