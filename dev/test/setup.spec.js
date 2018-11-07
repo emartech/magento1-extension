@@ -9,14 +9,15 @@ const knex = require('knex');
 const DbCleaner = require('./db-cleaner');
 const Magento2ApiClient = require('@emartech/magento2-api');
 const { productFactory } = require('./factories/products');
+const MagentoXmlRpcApiClient = require('./rpc');
 
 chai.use(chaiString);
 chai.use(chaiSubset);
 chai.use(sinonChai);
 global.expect = chai.expect;
 
-const createCustomer = (magentoApi, db) => async (customer, password) => {
-  await magentoApi.post({ path: '/index.php/rest/V1/customers', payload: { customer, password } });
+const createCustomer = (xmlRpcApi, db) => async customer => {
+  await xmlRpcApi.execute('customer', 'create', { customerData: customer });
 
   const { entity_id: entityId } = await db
     .select('entity_id')
@@ -24,7 +25,7 @@ const createCustomer = (magentoApi, db) => async (customer, password) => {
     .where({ email: customer.email })
     .first();
 
-  return Object.assign({}, customer, { entityId, password });
+  return Object.assign({}, customer, { entityId });
 };
 
 const createProduct = magentoApi => async product => {
@@ -115,10 +116,13 @@ before(async function() {
   console.log('host', hostname);
   console.log('Token: ' + token);
 
-  // this.magentoApi = new Magento2ApiClient({
-  //   baseUrl: `http://${this.hostname}`,
-  //   token: this.token
-  // });
+  this.xmlRpcApi = await MagentoXmlRpcApiClient.create();
+
+  this.magentoApi = new Magento2ApiClient({
+    baseUrl: `http://${this.hostname}`,
+    token: this.token
+  });
+
   // this.setDefaultStoreSettings = setDefaultStoreSettings(this.magentoApi);
   // this.clearStoreSettings = clearStoreSettings(this.magentoApi);
   //
@@ -127,57 +131,54 @@ before(async function() {
   //
   // await setCurrencyConfig(this.db);
   //
-  // if (!process.env.QUICK_TEST) {
-  //   this.createCustomer = createCustomer(this.magentoApi, this.db);
-  //   this.createProduct = createProduct(this.magentoApi);
-  //   this.deleteProduct = deleteProduct(this.magentoApi);
-  //   this.createCategory = createCategory(this.magentoApi);
-  //   this.deleteCategory = deleteCategory(this.magentoApi);
-  //
-  //   try {
-  //     this.customer = await this.createCustomer(
-  //       {
-  //         group_id: 0,
-  //         dob: '1977-11-12',
-  //         email: 'default@yolo.net',
-  //         firstname: 'Yolo',
-  //         lastname: 'Default',
-  //         store_id: 1,
-  //         website_id: 1,
-  //         disable_auto_group_change: 0
-  //       },
-  //       'Password1234'
-  //     );
-  //   } catch (e) {
-  //     console.log(e.response);
-  //   }
-  //
-  //   const { parentIds, childIds } = await createCategories(this.createCategory);
-  //   this.createdParentCategoryIds = parentIds;
-  //
-  //   this.product = await this.createProduct(productFactory({}));
-  //   this.storedProductsForProductSync = [];
-  //   const productsForProductSync = [
-  //     productFactory({
-  //       sku: 'PRODUCT-SYNC-SKU',
-  //       name: 'Product For Product Sync',
-  //       custom_attributes: [
-  //         {
-  //           attribute_code: 'description',
-  //           value: 'Default products description'
-  //         },
-  //         {
-  //           attribute_code: 'category_ids',
-  //           value: [parentIds[1].toString(), childIds[0].toString()]
-  //         }
-  //       ]
-  //     })
-  //   ];
-  //   for (const productForProductSync of productsForProductSync) {
-  //     const result = await this.createProduct(productForProductSync);
-  //     this.storedProductsForProductSync.push(result);
-  //   }
-  // }
+  if (!process.env.QUICK_TEST) {
+    this.createCustomer = createCustomer(this.xmlRpcApi, this.db);
+    //   this.createProduct = createProduct(this.magentoApi);
+    //   this.deleteProduct = deleteProduct(this.magentoApi);
+    //   this.createCategory = createCategory(this.magentoApi);
+    //   this.deleteCategory = deleteCategory(this.magentoApi);
+
+    try {
+      this.customer = await this.createCustomer({
+        group_id: 0,
+        dob: '1977-11-12',
+        email: 'default@yolo.net',
+        firstname: 'Yolo',
+        lastname: 'Default',
+        store_id: 1,
+        website_id: 1,
+        password: 'Password1234'
+      });
+    } catch (e) {
+      console.log('error', e);
+    }
+
+    // const { parentIds, childIds } = await createCategories(this.createCategory);
+    // this.createdParentCategoryIds = parentIds;
+
+    // this.product = await this.createProduct(productFactory({}));
+    // this.storedProductsForProductSync = [];
+    // const productsForProductSync = [
+    //   productFactory({
+    //     sku: 'PRODUCT-SYNC-SKU',
+    //     name: 'Product For Product Sync',
+    //     custom_attributes: [
+    //       {
+    //         attribute_code: 'description',
+    //         value: 'Default products description'
+    //       },
+    //       {
+    //         attribute_code: 'category_ids',
+    //         value: [parentIds[1].toString(), childIds[0].toString()]
+    //       }
+    //     ]
+    //   })
+    // ];
+    // for (const productForProductSync of productsForProductSync) {
+    //   const result = await this.createProduct(productForProductSync);
+    //   this.storedProductsForProductSync.push(result);
+    // }
+  }
 });
 
 const createCategories = async function(createCategory) {

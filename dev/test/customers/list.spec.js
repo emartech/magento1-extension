@@ -1,39 +1,6 @@
 'use strict';
 
-const customers = [
-  {
-    group_id: 0,
-    dob: '1977-11-12',
-    email: 'yolo@customer.net',
-    firstname: 'Yolo',
-    lastname: 'World',
-    store_id: 1,
-    website_id: 1,
-    disable_auto_group_change: 0
-  },
-  {
-    group_id: 0,
-    dob: '1977-11-12',
-    email: 'yolo2@customer.net',
-    firstname: 'Yolo2',
-    lastname: 'World',
-    store_id: 1,
-    website_id: 1,
-    disable_auto_group_change: 0
-  }
-];
-
 describe.skip('Customers endpoint', function() {
-  before(async function() {
-    for (const customer of customers) {
-      await this.createCustomer(customer);
-    }
-  });
-
-  after(async function() {
-    await this.db.raw('DELETE FROM customer_entity where email like "%@customer.net"');
-  });
-
   it('returns customers according to page and page_size inlcuding last_page', async function() {
     const page = 1;
     const limit = 2;
