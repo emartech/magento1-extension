@@ -22,8 +22,7 @@ class Emartech_Emarsys_Helper_Event_Subscription extends Emartech_Emarsys_Helper
     public function store(Mage_Newsletter_Model_Subscriber $subscription, $websiteId, $storeId, $type = null)
     {
         if (!$this->isEnabledForWebsite($websiteId)) {
-            //@todo remove comment, after we made the config api
-            //return false;
+            return false;
         }
 
         if (!$type) {

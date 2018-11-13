@@ -4,6 +4,9 @@
  * See COPYING.txt for license details.
  */
 
+/**
+ * Class Emartech_Emarsys_Helper_Event_Base
+ */
 class Emartech_Emarsys_Helper_Event_Base extends Mage_Core_Helper_Abstract
 {
     /**

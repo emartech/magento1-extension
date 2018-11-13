@@ -4,7 +4,11 @@
  * Copyright ©2018 Itegration Ltd., Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-class Emartech_Emarsys_Model_System extends Emartech_Emarsys_Model_Abstract
+
+/**
+ * Class Emartech_Emarsys_Model_System
+ */
+class Emartech_Emarsys_Model_System extends Emartech_Emarsys_Model_Abstract_Base implements Emartech_Emarsys_Model_Abstract_GetInterface
 {
     /**
      * @param Emartech_Emarsys_Controller_Request_Http $request

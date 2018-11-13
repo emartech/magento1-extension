@@ -8,7 +8,7 @@
 /**
  * Class Emartech_Emarsys_Model_Events
  */
-class Emartech_Emarsys_Model_Events extends Emartech_Emarsys_Model_Abstract
+class Emartech_Emarsys_Model_Events extends Emartech_Emarsys_Model_Abstract_Base implements Emartech_Emarsys_Model_Abstract_PostInterface
 {
     /**
      * @var null|Emartech_Emarsys_Model_Resource_Event_Collection

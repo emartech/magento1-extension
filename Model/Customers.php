@@ -4,7 +4,11 @@
  * Copyright ©2018 Itegration Ltd., Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract
+
+/**
+ * Class Emartech_Emarsys_Model_Customers
+ */
+class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract_Base implements Emartech_Emarsys_Model_Abstract_GetInterface
 {
     /**
      * @var null|Mage_Customer_Model_Resource_Customer_Collection

@@ -5,7 +5,7 @@
  */
 
 /**
- * Class Emartech_Emarsys_CustomersController
+ * Class Emartech_Emarsys_SubscriptionsController
  */
 class Emartech_Emarsys_SubscriptionsController extends Emartech_Emarsys_Controller_AbstractController
     implements Emartech_Emarsys_Controller_GetControllerInterface

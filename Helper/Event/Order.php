@@ -5,7 +5,7 @@
  */
 
 /**
- * Class Emartech_Emarsys_Helper_Event_Subscription
+ * Class Emartech_Emarsys_Helper_Event_Order
  */
 class Emartech_Emarsys_Helper_Event_Order extends Emartech_Emarsys_Helper_Event_Base
 {
@@ -22,8 +22,7 @@ class Emartech_Emarsys_Helper_Event_Order extends Emartech_Emarsys_Helper_Event_
         $storeId = $order->getStoreId();
 
         if (!$this->isEnabledForStore($storeId)) {
-            //@todo remove comment, after we made the config api
-            //return false;
+            return false;
         }
 
         $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();

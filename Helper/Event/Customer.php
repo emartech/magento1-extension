@@ -22,8 +22,7 @@ class Emartech_Emarsys_Helper_Event_Customer extends Emartech_Emarsys_Helper_Eve
     public function store($customerId, $websiteId, $storeId, $type = null)
     {
         if (!$this->isEnabledForWebsite($websiteId)) {
-            //@todo remove comment, after we made the config api
-            //return false;
+            return false;
         }
 
         if (!$type) {

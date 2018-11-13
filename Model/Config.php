@@ -8,7 +8,7 @@
 /**
  * Class Emartech_Emarsys_Model_Config
  */
-class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract
+class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base implements Emartech_Emarsys_Model_Abstract_PostInterface
 {
 
     /**
