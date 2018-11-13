@@ -21,6 +21,8 @@ class Emartech_Emarsys_Helper_Config extends Mage_Core_Helper_Abstract
 
     const STORE_SETTINGS = 'store_settings';
 
+    const SCOPE_TYPE_DEFAULT = 'websites';
+
     /**
      * @param string   $key
      * @param null|int $websiteId
