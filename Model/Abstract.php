@@ -6,10 +6,5 @@
  */
 abstract class Emartech_Emarsys_Model_Abstract extends Mage_Core_Model_Abstract
 {
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    abstract public function handleRequest($params);
+
 }

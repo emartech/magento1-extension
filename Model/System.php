@@ -7,11 +7,11 @@
 class Emartech_Emarsys_Model_System extends Emartech_Emarsys_Model_Abstract
 {
     /**
-     * @param array $params
+     * @param Emartech_Emarsys_Controller_Request_Http $request
      *
      * @return array
      */
-    public function handleRequest($params)
+    public function handleGet($request)
     {
         return [
             'magento_version' => $this->_getMagentoVersion(),

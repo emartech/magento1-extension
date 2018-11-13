@@ -58,16 +58,16 @@ class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract
     ];
 
     /**
-     * @param array $params
+     * @param Emartech_Emarsys_Controller_Request_Http $request
      *
      * @return array
      */
-    public function handleRequest($params)
+    public function handleGet($request)
     {
-        $websiteIds = array_key_exists('website_id', $params) ? $params['website_id'] : [];
-        $storeIds = array_key_exists('store_id', $params) ? $params['store_id'] : [];
-        $page = array_key_exists('page', $params) ? $params['page'] : 0;
-        $pageSize = array_key_exists('page_size', $params) ? $params['page_size'] : 1000;
+        $websiteIds = $request->getParam('website_id', []);
+        $storeIds = $request->getParam('store_id', []);
+        $page = $request->getParam('page', 0);
+        $pageSize = $request->getParam('page_size', 1000);
 
         try {
             $this

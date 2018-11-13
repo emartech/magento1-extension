@@ -16,18 +16,18 @@ class Emartech_Emarsys_Model_Subscriptions extends Emartech_Emarsys_Model_Abstra
     private $_collection = null;
 
     /**
-     * @param array $params
+     * @param Emartech_Emarsys_Controller_Request_Http $request
      *
      * @return array
      */
-    public function handleRequest($params)
+    public function handleGet($request)
     {
-        $websiteIds = array_key_exists('website_id', $params) ? $params['website_id'] : [];
-        $storeIds = array_key_exists('store_id', $params) ? $params['store_id'] : [];
-        $subscribed = array_key_exists('subscribed', $params) ? $params['subscribed'] : null;
-        $onlyGuest = array_key_exists('only_quest', $params) ? $params['only_quest'] : false;
-        $page = array_key_exists('page', $params) ? $params['page'] : 0;
-        $pageSize = array_key_exists('page_size', $params) ? $params['page_size'] : 1000;
+        $websiteIds = $request->getParam('website_id', []);
+        $storeIds = $request->getParam('store_id', []);
+        $subscribed = $request->getParam('subscribed', null);
+        $onlyGuest = $request->getParam('only_quest', false);
+        $page = $request->getParam('page', 0);
+        $pageSize = $request->getParam('page_size', 1000);
 
         try {
             $this
@@ -65,13 +65,12 @@ class Emartech_Emarsys_Model_Subscriptions extends Emartech_Emarsys_Model_Abstra
     }
 
     /**
-     * @param $subscription
+     * @param Mage_Newsletter_Model_Subscriber $subscription
      *
      * @return string[]
      */
     private function _parseSubscription($subscription)
     {
-        var_dump(get_class($subscription));die();
         $returnArray = [];
 
         foreach ($subscription->getData() as $key => $value) {
@@ -186,8 +185,6 @@ class Emartech_Emarsys_Model_Subscriptions extends Emartech_Emarsys_Model_Abstra
         $this->_collection
             ->setCurPage($page)
             ->setPageSize($pageSize);
-        return $this;
-
         return $this;
     }
 }
