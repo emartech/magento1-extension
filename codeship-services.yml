@@ -8,8 +8,11 @@ magento1-test.local:
   depends_on:
     - db
   volumes:
-    - ./Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
-    - ./:/app/app/code/local/Emartech/Emarsys
+    - ./app/etc/modules/Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
+    - ./app/code/community/Emartech:/app/app/code/community/Emartech
+    - ./app/design/frontend/base/default/layout/emarsys.xml:/app/app/design/frontend/base/default/layout/emarsys.xml
+    - ./app/design/frontend/base/default/template/emarsys:/app/app/design/frontend/base/default/template/emarsys
+    - ./skin/frontend/base/default/js/emarsys:/app/skin/frontend/base/default/js/emarsys
     - ./dev/setup:/opt/emartech/setup
   cached: true
   encrypted_env_file: codeship.env.encrypted
@@ -22,8 +25,6 @@ magento-static:
   image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
   container_name: magento-static
   volumes:
-    - ./dev/Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
-    - ./:/app/app/code/local/Emartech/Emarsys
     - ./dev/setup:/opt/emartech/setup
   cached: true
   encrypted_env_file: codeship.env.encrypted

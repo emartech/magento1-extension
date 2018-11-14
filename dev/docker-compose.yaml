@@ -12,8 +12,11 @@ services:
       - MYSQL_DATABASE=magento1_test
       - MAGENTO_URL=http://magento1-test.local/
     volumes:
-      - ./../Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
-      - ./..:/app/app/code/local/Emartech/Emarsys
+      - ./../app/etc/modules/Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
+      - ./../app/code/community/Emartech:/app/app/code/community/Emartech
+      - ./../app/design/frontend/base/default/layout/emarsys.xml:/app/app/design/frontend/base/default/layout/emarsys.xml
+      - ./../app/design/frontend/base/default/template/emarsys:/app/app/design/frontend/base/default/template/emarsys
+      - ./../skin/frontend/base/default/js/emarsys:/app/skin/frontend/base/default/js/emarsys
       - ./setup:/opt/emartech/setup
     command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
   magento-dev:
@@ -28,8 +31,11 @@ services:
       - MYSQL_DATABASE=magento1_dev
       - MAGENTO_URL=http://magento1-dev.local:8886/
     volumes:
-      - ./../Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
-      - ./..:/app/app/code/local/Emartech/Emarsys
+      - ./../app/etc/modules/Emartech_Emarsys.xml:/app/app/etc/modules/Emartech_Emarsys.xml
+      - ./../app/code/community/Emartech:/app/app/code/community/Emartech
+      - ./../app/design/frontend/base/default/layout/emarsys.xml:/app/app/design/frontend/base/default/layout/emarsys.xml
+      - ./../app/design/frontend/base/default/template/emarsys:/app/app/design/frontend/base/default/template/emarsys
+      - ./../skin/frontend/base/default/js/emarsys:/app/skin/frontend/base/default/js/emarsys
       - ./setup:/opt/emartech/setup
     command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
   db:

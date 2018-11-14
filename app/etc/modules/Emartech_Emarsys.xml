@@ -3,7 +3,7 @@
   <modules>
     <Emartech_Emarsys>
       <active>true</active>
-      <codePool>local</codePool>
+      <codePool>community</codePool>
     </Emartech_Emarsys>
   </modules>
 </config>
