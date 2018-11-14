@@ -10,6 +10,11 @@
 interface Emartech_Emarsys_Controller_PostControllerInterface
 {
     /**
+     * @return Emartech_Emarsys_Model_Abstract_PostInterface
+     */
+    public function getModel();
+
+    /**
      * Handle post request
      *
      * @return array

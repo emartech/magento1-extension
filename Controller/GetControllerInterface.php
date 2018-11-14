@@ -10,6 +10,11 @@
 interface Emartech_Emarsys_Controller_GetControllerInterface
 {
     /**
+     * @return Emartech_Emarsys_Model_Abstract_GetInterface
+     */
+    public function getModel();
+
+    /**
      * Handle get request
      *
      * @return array

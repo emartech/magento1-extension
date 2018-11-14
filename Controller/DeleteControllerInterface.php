@@ -10,6 +10,11 @@
 interface Emartech_Emarsys_Controller_DeleteControllerInterface
 {
     /**
+     * @return Emartech_Emarsys_Model_Abstract_DeleteInterface
+     */
+    public function getModel();
+
+    /**
      * Handle delete request
      *
      * @return array

@@ -8,15 +8,29 @@
  * Class Emartech_Emarsys_SubscriptionsController
  */
 class Emartech_Emarsys_SubscriptionsController extends Emartech_Emarsys_Controller_AbstractController
-    implements Emartech_Emarsys_Controller_GetControllerInterface
+    implements Emartech_Emarsys_Controller_GetControllerInterface, Emartech_Emarsys_Controller_PostControllerInterface
 {
+    /**
+     * @return Emartech_Emarsys_Model_Subscriptions
+     */
+    public function getModel()
+    {
+        return Mage::getModel('emartech_emarsys/subscriptions');;
+    }
+
     /**
      * @return array
      */
     public function handleGet()
     {
-        /* @var Emartech_Emarsys_Model_Subscriptions $model */
-        $model = Mage::getModel('emartech_emarsys/subscriptions');
-        return $model->handleGet($this->_apiRequest);
+        return $this->getModel()->handleGet($this->_apiRequest);
+    }
+
+    /**
+     * @return array
+     */
+    public function handlePost()
+    {
+        return $this->getModel()->handlePost($this->_apiRequest);
     }
 }

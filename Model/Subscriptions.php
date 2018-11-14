@@ -8,12 +8,31 @@
 /**
  * Class Emartech_Emarsys_Model_Subscriptions
  */
-class Emartech_Emarsys_Model_Subscriptions extends Emartech_Emarsys_Model_Abstract_Base implements Emartech_Emarsys_Model_Abstract_GetInterface
+class Emartech_Emarsys_Model_Subscriptions
+    extends Emartech_Emarsys_Model_Abstract_Base
+    implements Emartech_Emarsys_Model_Abstract_GetInterface, Emartech_Emarsys_Model_Abstract_PostInterface
 {
     /**
      * @var null|Mage_Newsletter_Model_Resource_Subscriber_Collection
      */
     private $_collection = null;
+
+    /**
+     * @var null\Mage_Customer_Model_Config_Share
+     */
+    private $_sharingConfig = null;
+
+    /**
+     * @return Mage_Customer_Model_Config_Share
+     */
+    private function _getSharingConfig()
+    {
+        if ($this->_sharingConfig === null) {
+            $this->_sharingConfig = Mage::getSingleton('customer/config_share');
+        }
+
+        return $this->_sharingConfig;
+    }
 
     /**
      * @param Emartech_Emarsys_Controller_Request_Http $request
@@ -49,6 +68,106 @@ class Emartech_Emarsys_Model_Subscriptions extends Emartech_Emarsys_Model_Abstra
             'total_count'   => $this->_collection->getSize(),
             'subscriptions' => $this->_handleSubscriptions(),
         ];
+    }
+
+    /**
+     * @param Emartech_Emarsys_Controller_Request_Http $request
+     *
+     * @return array
+     */
+    public function handlePost($request)
+    {
+        $subscriptions = $request->getParam('subscriptions', []);
+
+        foreach ($subscriptions as $subscription) {
+            if (array_key_exists('subscriber_status', $subscription)) {
+                $this->_changeSubscription(
+                    $subscription,
+                    (bool)$subscription['subscriber_status'] === true ?
+                        Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED :
+                        Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED
+                );
+            }
+        }
+
+        return ['status' => 'ok'];
+    }
+
+    /**
+     * @param array $subscription
+     * @param int   $type
+     *
+     * @return bool
+     */
+    private function _changeSubscription($subscription, $type)
+    {
+        $this->_initCollection();
+
+        if (array_key_exists('subscriber_email', $subscription) && $subscription['subscriber_email']) {
+            $subscriberEmail = $subscription['subscriber_email'];
+            $customerId = array_key_exists('customer_id', $subscription) ? $subscription['customer_id'] : 0;
+            $this
+                ->_filterEmail($subscriberEmail)
+                ->_filterCustomer($customerId);
+
+            if ($this->_getSharingConfig()->isWebsiteScope()) {
+                $websiteId = array_key_exists('website_id', $subscription) ? $subscription['website_id'] : 0;
+                $this
+                    ->_joinWebsite()
+                    ->_filterWebsite($websiteId);
+            }
+
+            /** @var Mage_Newsletter_Model_Subscriber $subscriber */
+            $subscriber = $this->_collection->fetchItem();
+
+            if (!($subscriber instanceof Mage_Newsletter_Model_Subscriber)) {
+                if ($type !== Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
+                    return false;
+                }
+
+                $subscriber = Mage::getModel('newsletter/subscriber');
+            }
+
+            foreach ($subscription as $key => $value) {
+                $subscriber->setData($key, $value);
+            }
+
+            $subscriber->setStatus($type);
+            $subscriber->setIsStatusChanged(true);
+
+            try {
+                $subscriber->save();
+            } catch (Exception $e) {
+                return false;
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return $this
+     */
+    private function _filterEmail($email)
+    {
+        $this->_collection->addFieldToFilter('subscriber_email', ['eq' => $email]);
+
+        return $this;
+    }
+
+    /**
+     * @param int $customerId
+     *
+     * @return $this
+     */
+    private function _filterCustomer($customerId)
+    {
+        $this->_collection->addFieldToFilter('customer_id', ['eq' => (int)$customerId]);
+
+        return $this;
     }
 
     /**
@@ -89,8 +208,8 @@ class Emartech_Emarsys_Model_Subscriptions extends Emartech_Emarsys_Model_Abstra
 
         // @codingStandardsIgnoreLine
         $this->_collection->getSelect()->joinLeft(
-            [$storeTable],
-            $storeTable . '.store_id = main_table.store_id',
+            ['store' => $storeTable],
+            'store.store_id = main_table.store_id',
             ['website_id']
         );
 

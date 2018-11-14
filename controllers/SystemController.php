@@ -7,15 +7,22 @@
 /**
  * Class Emartech_Emarsys_SystemController
  */
-class Emartech_Emarsys_SystemController extends Emartech_Emarsys_Controller_AbstractController
+class Emartech_Emarsys_SystemController
+    extends Emartech_Emarsys_Controller_AbstractController
     implements Emartech_Emarsys_Controller_GetControllerInterface
 {
+    /**
+     * @return Emartech_Emarsys_Model_System
+     */
+    public function getModel()
+    {
+        return Mage::getModel('emartech_emarsys/system');;
+    }
+
     /**
      * @return array
      */
     public function handleGet(){
-        /** @var Emartech_Emarsys_Model_System $model */
-        $model = Mage::getModel('emartech_emarsys/system');
-        return $model->handleGet($this->_apiRequest);
+        return $this->getModel()->handleGet($this->_apiRequest);
     }
 }

@@ -7,8 +7,18 @@
 /**
  * Class Emartech_Emarsys_ConfigController
  */
-class Emartech_Emarsys_ConfigController extends Emartech_Emarsys_Controller_AbstractController implements Emartech_Emarsys_Controller_PostControllerInterface
+class Emartech_Emarsys_ConfigController
+    extends Emartech_Emarsys_Controller_AbstractController
+    implements Emartech_Emarsys_Controller_PostControllerInterface
 {
+    /**
+     * @return Emartech_Emarsys_Model_Config
+     */
+    public function getModel()
+    {
+        return Mage::getModel('emartech_emarsys/config');
+    }
+    
     /**
      * @return void
      */
@@ -22,8 +32,6 @@ class Emartech_Emarsys_ConfigController extends Emartech_Emarsys_Controller_Abst
      */
     public function handlePost()
     {
-        /* @var Emartech_Emarsys_Model_Config $model */
-        $model = Mage::getModel('emartech_emarsys/config');
-        return $model->handlePost($this->_apiRequest);
+        return $this->getModel()->handlePost($this->_apiRequest);
     }
 }

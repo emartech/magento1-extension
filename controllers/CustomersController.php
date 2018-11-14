@@ -7,15 +7,23 @@
 /**
  * Class Emartech_Emarsys_CustomersController
  */
-class Emartech_Emarsys_CustomersController extends Emartech_Emarsys_Controller_AbstractController implements Emartech_Emarsys_Controller_GetControllerInterface
+class Emartech_Emarsys_CustomersController
+    extends Emartech_Emarsys_Controller_AbstractController
+    implements Emartech_Emarsys_Controller_GetControllerInterface
 {
+    /**
+     * @return Emartech_Emarsys_Model_Customers
+     */
+    public function getModel()
+    {
+        return Mage::getModel('emartech_emarsys/customers');
+    }
+
     /**
      * @return array
      */
     public function handleGet()
     {
-        /* @var Emartech_Emarsys_Model_Customers $model */
-        $model = Mage::getModel('emartech_emarsys/customers');
-        return $model->handleGet($this->_apiRequest);
+        return $this->getModel()->handleGet($this->_apiRequest);
     }
 }
