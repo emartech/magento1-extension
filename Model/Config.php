@@ -12,6 +12,18 @@ class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base
 {
 
     /**
+     * @var array
+     */
+    private $_defaultConfig = [
+        Emartech_Emarsys_Helper_Config::CUSTOMER_EVENTS           => Emartech_Emarsys_Helper_Config::CONFIG_DISABLED,
+        Emartech_Emarsys_Helper_Config::SALES_EVENTS              => Emartech_Emarsys_Helper_Config::CONFIG_DISABLED,
+        Emartech_Emarsys_Helper_Config::MARKETING_EVENTS          => Emartech_Emarsys_Helper_Config::CONFIG_DISABLED,
+        Emartech_Emarsys_Helper_Config::INJECT_WEBEXTEND_SNIPPETS => Emartech_Emarsys_Helper_Config::CONFIG_DISABLED,
+        Emartech_Emarsys_Helper_Config::MERCHANT_ID               => Emartech_Emarsys_Helper_Config::CONFIG_EMPTY,
+        Emartech_Emarsys_Helper_Config::SNIPPET_URL               => Emartech_Emarsys_Helper_Config::CONFIG_EMPTY,
+    ];
+
+    /**
      * @param Emartech_Emarsys_Controller_Request_Http $request
      *
      * @return array
@@ -19,7 +31,7 @@ class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base
     public function handlePost($request)
     {
         $websiteId = $request->getParam('website_id', 0);
-        $config = $request->getParam('config', []);
+        $config = $request->getParam('config', $this->_defaultConfig);
 
         try {
             foreach ($config as $key => $value) {

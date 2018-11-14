@@ -15,9 +15,12 @@ class Emartech_Emarsys_Helper_Config extends Mage_Core_Helper_Abstract
     const CONFIG_DISABLED = 'disabled';
     const CONFIG_EMPTY    = null;
 
-    const CUSTOMER_EVENTS  = 'collect_customer_events';
-    const SALES_EVENTS     = 'collect_sales_events';
-    const MARKETING_EVENTS = 'collect_marketing_events';
+    const CUSTOMER_EVENTS           = 'collect_customer_events';
+    const SALES_EVENTS              = 'collect_sales_events';
+    const MARKETING_EVENTS          = 'collect_marketing_events';
+    const INJECT_WEBEXTEND_SNIPPETS = 'inject_webextend_snippets';
+    const MERCHANT_ID               = 'merchant_id';
+    const SNIPPET_URL               = 'web_tracking_snippet_url';
 
     const STORE_SETTINGS = 'store_settings';
 

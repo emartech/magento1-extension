@@ -10,6 +10,14 @@
 class Emartech_Emarsys_ConfigController extends Emartech_Emarsys_Controller_AbstractController implements Emartech_Emarsys_Controller_PostControllerInterface
 {
     /**
+     * @return void
+     */
+    public function setDefaultAction()
+    {
+        $this->indexAction();
+    }
+
+    /**
      * @return array
      */
     public function handlePost()
