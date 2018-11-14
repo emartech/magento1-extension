@@ -24,7 +24,7 @@ class Emartech_Emarsys_Controller_Request_Http
      */
     public function __construct()
     {
-       $this->_request = Mage::app()->getRequest();
+        $this->_request = Mage::app()->getRequest();
     }
 
     /**
@@ -44,12 +44,13 @@ class Emartech_Emarsys_Controller_Request_Http
 
     /**
      * @param string $key
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return mixed
      */
     public function getParam($key, $default = null)
     {
+        $this->getParams();
         $keyName = $this->_decamelize($key);
         return isset($this->_params[$keyName]) ? $this->_params[$keyName] : $default;
     }
@@ -79,12 +80,27 @@ class Emartech_Emarsys_Controller_Request_Http
      */
     private function _normalizeKeys(&$array)
     {
+        $this->_normalizeKeysRecursive($array);
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return void
+     */
+    private function _normalizeKeysRecursive(&$array)
+    {
         $newArray = [];
         foreach ($array as $key => $value) {
             $newKey = $key;
             if ($key !== $this->_decamelize($key)) {
                 $newKey = $this->_decamelize($key);
             }
+
+            if (is_array($value)) {
+                $this->_normalizeKeysRecursive($value);
+            }
+
             $newArray[$newKey] = $value;
         }
 
@@ -96,7 +112,8 @@ class Emartech_Emarsys_Controller_Request_Http
      *
      * @return string
      */
-    private function _decamelize($string) {
+    private function _decamelize($string)
+    {
         return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $string));
     }
 }
