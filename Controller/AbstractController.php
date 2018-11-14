@@ -81,9 +81,22 @@ abstract class Emartech_Emarsys_Controller_AbstractController extends Mage_Core_
             $this->_badRequestException();
 
         } catch (Mage_Core_Exception $e) {
-            $this->_sendData(['status' => 'error', 'message' => $e->getMessage()]);
+            $this->_sendData(
+                [
+                    'status'  => 'error',
+                    'message' => $e->getMessage(),
+                ],
+                Mage_Api2_Model_Server::HTTP_BAD_REQUEST
+            );
         } catch (Exception $e) {
-            $this->_internalError($e);
+            Mage::logException($e);
+            $this->_sendData(
+                [
+                    'status'  => 'error',
+                    'message' => $e->getMessage(),
+                ],
+                Mage_Api2_Model_Server::HTTP_BAD_REQUEST
+            );
         }
     }
 
@@ -105,7 +118,11 @@ abstract class Emartech_Emarsys_Controller_AbstractController extends Mage_Core_
         if (!$this->_getConnectorHelper()->validAuthorization($authorizationHeader)) {
             $this->getResponse()
                 ->setHeader('Content-type', 'application/json; charset=UTF-8')
-                ->setHeader('HTTP/1.1', '401 Unauthorized')
+                ->setHeader(
+                    'HTTP/1.1',
+                    Mage_Api2_Model_Server::HTTP_UNAUTHORIZED . ' ' .
+                    Zend_Http_Response::responseCodeAsText(Mage_Api2_Model_Server::HTTP_UNAUTHORIZED)
+                )
                 ->sendHeadersAndExit();
         }
     }
@@ -122,24 +139,12 @@ abstract class Emartech_Emarsys_Controller_AbstractController extends Mage_Core_
     }
 
     /**
-     * Internal error
-     *
-     * @param Exception $exception
-     *
-     * @return void
-     */
-    private function _internalError($exception)
-    {
-        Mage::logException($exception);
-        $this->_sendData(['status' => 'error', 'message' => $exception->getMessage()]);
-    }
-
-    /**
      * @param array $data
+     * @param int   $httpCode
      *
      * @return void
      */
-    private function _sendData($data)
+    private function _sendData($data, $httpCode = Mage_Api2_Model_Server::HTTP_OK)
     {
         if (!is_string($data)) {
             try {
@@ -151,6 +156,7 @@ abstract class Emartech_Emarsys_Controller_AbstractController extends Mage_Core_
 
         $this->getResponse()
             ->setHeader('Content-type', 'application/json; charset=UTF-8')
+            ->setHeader('HTTP/1.1', $httpCode . ' ' . Zend_Http_Response::responseCodeAsText($httpCode))
             ->setBody($data)
             ->sendResponse();
         exit;

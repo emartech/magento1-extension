@@ -65,6 +65,7 @@ class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract_B
      * @param Emartech_Emarsys_Controller_Request_Http $request
      *
      * @return array
+     * @throws Mage_Core_Exception
      */
     public function handleGet($request)
     {
@@ -73,18 +74,14 @@ class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract_B
         $page = $request->getParam('page', 0);
         $pageSize = $request->getParam('page_size', 1000);
 
-        try {
-            $this
-                ->_initCollection()
-                ->_filterMixedParam($websiteIds, 'website_id')
-                ->_filterMixedParam($storeIds, 'store_id')
-                ->_joinAddress('billing')
-                ->_joinAddress('shipping')
-                ->_joinSubscriptionStatus()
-                ->_setPage($page, $pageSize);
-        } catch (Exception $e) {
-            Mage::logException($e);
-        }
+        $this
+            ->_initCollection()
+            ->_filterMixedParam($websiteIds, 'website_id')
+            ->_filterMixedParam($storeIds, 'store_id')
+            ->_joinAddress('billing')
+            ->_joinAddress('shipping')
+            ->_joinSubscriptionStatus()
+            ->_setPage($page, $pageSize);
 
         return [
             'current_page' => $this->_collection->getCurPage(),
