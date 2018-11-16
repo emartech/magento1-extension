@@ -1,55 +1,23 @@
 'use strict';
 
-const defaults = {
-  collectCustomerEvents: 'disabled',
-  collectSalesEvents: 'disabled',
-  collectMarketingEvents: 'disabled',
-  injectSnippet: 'disabled',
-  merchantId: null,
-  webTrackingSnippetUrl: null
-};
-
 const dbKeys = {
   collectCustomerEvents: 'collect_customer_events',
   collectSalesEvents: 'collect_sales_events',
   collectMarketingEvents: 'collect_marketing_events',
   injectSnippet: 'inject_webextend_snippets',
   merchantId: 'merchant_id',
-  webTrackingSnippetUrl: 'web_tracking_snippet_url'
+  webTrackingSnippetUrl: 'web_tracking_snippet_url',
+  storeConfig: 'store_config'
 };
 
 const scopeId = 1;
 describe.skip('Config endpoint', function() {
   afterEach(async function() {
-    await this.magentoApi.setDefaultConfig(1);
+    await this.setDefaultConfig();
   });
 
   after(async function() {
     await this.setDefaultStoreSettings();
-  });
-
-  describe('setDefaultConfig', function() {
-    it('should create default config for website', async function() {
-      await this.db
-        .delete()
-        .from('core_config_data')
-        .where('path', 'like', 'emartech/emarsys/config/%');
-
-      await this.magentoApi.setDefaultConfig(scopeId);
-
-      const config = await this.db
-        .select()
-        .from('core_config_data')
-        .where('scope_id', scopeId)
-        .andWhere('path', 'like', 'emartech/emarsys/config/%');
-
-      for (const key in defaults) {
-        const configItem = config.find(item => {
-          return item.path === `emartech/emarsys/config/${dbKeys[key]}`;
-        });
-        expect(configItem.value).to.be.equal(defaults[key]);
-      }
-    });
   });
 
   describe('set', function() {
@@ -60,7 +28,8 @@ describe.skip('Config endpoint', function() {
         collectMarketingEvents: 'enabled',
         injectSnippet: 'enabled',
         merchantId: '1234567',
-        webTrackingSnippetUrl: 'https://path/to/snippet'
+        webTrackingSnippetUrl: 'https://path/to/snippet',
+        storeConfig: [{ id: 1, slug: 'test' }]
       };
 
       await this.magentoApi.execute('config', 'set', {

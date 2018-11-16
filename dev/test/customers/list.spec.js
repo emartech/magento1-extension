@@ -1,16 +1,17 @@
 'use strict';
 
-describe.skip('Customers endpoint', function() {
+describe('Customers endpoint', function() {
   it('returns customers according to page and page_size inlcuding last_page', async function() {
     const page = 1;
     const limit = 2;
 
     const { customers, lastPage } = await this.magentoApi.execute('customers', 'getAll', { page, limit, websiteId: 1 });
+
     const customer = customers[0];
 
     expect(customers.length).to.equal(2);
-    expect(customer.id).to.equal(1);
-    expect(lastPage).to.equal(2);
+    expect(customer.id).to.equal('64');
+    expect(lastPage).to.equal(22);
 
     expect(customer).to.have.property('id');
     expect(customer.email).to.be.a('string');

@@ -7,7 +7,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const knex = require('knex');
 const DbCleaner = require('./db-cleaner');
-const Magento2ApiClient = require('@emartech/magento2-api');
+const MagentoApiClient = require('@emartech/magento2-api');
 const { productFactory } = require('./factories/products');
 const MagentoXmlRpcApiClient = require('./rpc');
 
@@ -61,6 +61,20 @@ const setCurrencyConfig = async db => {
     currency_from: 'USD',
     currency_to: 'UGX',
     rate: '2'
+  });
+};
+
+const setDefaultConfig = magentoApi => async () => {
+  return await magentoApi.setConfig({
+    websiteId: 1,
+    config: {
+      collectCustomerEvents: 'disabled',
+      collectSalesEvents: 'disabled',
+      collectMarketingEvents: 'disabled',
+      injectSnippet: 'disabled',
+      merchantId: '',
+      webTrackingSnippetUrl: 'https://path/to/snippet'
+    }
   });
 };
 
@@ -118,12 +132,14 @@ before(async function() {
 
   this.xmlRpcApi = await MagentoXmlRpcApiClient.create();
 
-  this.magentoApi = new Magento2ApiClient({
+  this.magentoApi = new MagentoApiClient({
     baseUrl: `http://${this.hostname}`,
-    token: this.token
+    token: this.token,
+    platform: 'magento1'
   });
 
-  // this.setDefaultStoreSettings = setDefaultStoreSettings(this.magentoApi);
+  this.setDefaultConfig = setDefaultConfig(this.magentoApi);
+  this.setDefaultStoreSettings = setDefaultStoreSettings(this.magentoApi);
   // this.clearStoreSettings = clearStoreSettings(this.magentoApi);
   //
   // await this.magentoApi.setDefaultConfig(1);
