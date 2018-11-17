@@ -30,11 +30,11 @@ $ make up
 ```
 This will set up the containers, run Magento installation and installs the extension.
 
-The web container will expose its port `80` to port `8888` on the host machine.
+The web container will expose its port `80` to port `8886` on the host machine.
 
-By default the Magento store will be available at http://magento.local:8888, but you have to add this to your `/etc/hosts` file first:
+By default the Magento store will be available at http://magento1-dev.local:8886, but you have to add this to your `/etc/hosts` file first:
 ```
-127.0.0.1 magento.local
+127.0.0.1 magento1-dev.local
 ```
 
 ### Create test DB

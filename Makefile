@@ -57,8 +57,7 @@ compile: ## Runs Magento CLI setup:di:compile command
 	@$(COMPOSE) exec --user application magento-dev bin/magento setup:di:compile
 
 flush: ## Runs Magento CLI cache:flush command
-	@$(COMPOSE) exec --user application magento-dev rm -rf generated/code/
-	@$(COMPOSE) exec --user application magento-dev bin/magento cache:flush
+	@$(COMPOSE) exec --user application magento-dev bin/magento cache:clean
 
 flush-test: ## Runs Magento CLI cache:flush command
 	@$(COMPOSE) exec --user application magento-test rm -rf generated/code/
