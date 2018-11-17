@@ -8,6 +8,8 @@ echo "-|| Setting base URL"
 bin/magento config:set web/unsecure/base_url $MAGENTO_URL
 bin/magento config:set web/secure/base_url $MAGENTO_URL
 
-bin/magento cache:flush
+bin/magento cache:clean
 
 bin/magento sys:setup:run
+
+bin/magento cache:clean
