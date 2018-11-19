@@ -14,6 +14,13 @@ class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base
     /**
      * @var array
      */
+    private $_convertableKeys = [
+        'inject_snippet' => Emartech_Emarsys_Helper_Config::INJECT_WEBEXTEND_SNIPPETS,
+    ];
+
+    /**
+     * @var array
+     */
     private $_defaultConfig = [
         Emartech_Emarsys_Helper_Config::CUSTOMER_EVENTS           => Emartech_Emarsys_Helper_Config::CONFIG_DISABLED,
         Emartech_Emarsys_Helper_Config::SALES_EVENTS              => Emartech_Emarsys_Helper_Config::CONFIG_DISABLED,
@@ -35,6 +42,9 @@ class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base
 
         try {
             foreach ($config as $key => $value) {
+                if (array_key_exists($key, $this->_convertableKeys)) {
+                    $key = $this->_convertableKeys[$key];
+                }
                 $this->setConfigValue($key, $value, $websiteId);
             }
             $this->cleanScope();
