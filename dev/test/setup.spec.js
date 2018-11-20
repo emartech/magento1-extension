@@ -64,9 +64,9 @@ const setCurrencyConfig = async db => {
   });
 };
 
-const setDefaultConfig = magentoApi => async () => {
-  return await magentoApi.setConfig({
-    websiteId: 1,
+const setDefaultConfig = magentoApi => async websiteId => {
+  return await magentoApi.execute('config', 'set', {
+    websiteId,
     config: {
       collectCustomerEvents: 'disabled',
       collectSalesEvents: 'disabled',
@@ -78,9 +78,9 @@ const setDefaultConfig = magentoApi => async () => {
   });
 };
 
-const setDefaultStoreSettings = magentoApi => async () => {
-  return await magentoApi.setConfig({
-    websiteId: 1,
+const setDefaultStoreSettings = magentoApi => async websiteId => {
+  return await magentoApi.execute('config', 'set', {
+    websiteId,
     config: {
       storeSettings: [
         {
@@ -224,5 +224,5 @@ beforeEach(async function() {
 
 afterEach(async function() {
   this.sandbox.restore();
-  // await this.dbCleaner.resetEmarsysEventsData();
+  await this.dbCleaner.resetEmarsysEventsData();
 });

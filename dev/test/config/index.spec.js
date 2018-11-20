@@ -11,13 +11,13 @@ const dbKeys = {
 };
 
 const scopeId = 1;
-describe.skip('Config endpoint', function() {
+describe('Config endpoint', function() {
   afterEach(async function() {
-    await this.setDefaultConfig();
+    await this.setDefaultConfig(1);
   });
 
   after(async function() {
-    await this.setDefaultStoreSettings();
+    await this.setDefaultStoreSettings(1);
   });
 
   describe('set', function() {
@@ -28,8 +28,7 @@ describe.skip('Config endpoint', function() {
         collectMarketingEvents: 'enabled',
         injectSnippet: 'enabled',
         merchantId: '1234567',
-        webTrackingSnippetUrl: 'https://path/to/snippet',
-        storeConfig: [{ id: 1, slug: 'test' }]
+        webTrackingSnippetUrl: 'https://path/to/snippet'
       };
 
       await this.magentoApi.execute('config', 'set', {
@@ -47,6 +46,26 @@ describe.skip('Config endpoint', function() {
         const configItem = config.find(item => item.path === `emartech/emarsys/config/${dbKeys[key]}`);
         expect(configItem.value).to.be.equal(testConfig[key]);
       }
+    });
+
+    it('should modify store config for website', async function() {
+      const testConfig = {
+        storeSettings: [{ id: 1, slug: 'test' }]
+      };
+
+      await this.magentoApi.execute('config', 'set', {
+        websiteId: scopeId,
+        config: testConfig
+      });
+
+      const config = await this.db
+        .select()
+        .from('core_config_data')
+        .where('scope_id', scopeId)
+        .andWhere('path', 'like', 'emartech/emarsys/config/store_settings')
+        .first();
+
+      expect(config.value).to.be.equal(JSON.stringify(testConfig.storeSettings));
     });
   });
 });
