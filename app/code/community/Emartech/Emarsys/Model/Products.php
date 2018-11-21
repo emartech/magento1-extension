@@ -146,7 +146,7 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
             'last_page'     => $lastPageNumber,
             'page_size'     => $pageSize,
             'total_count'   => $this->_numberOfItems,
-            'subscriptions' => $this->_handleProducts(),
+            'products' => $this->_handleProducts(),
         ];
     }
 
