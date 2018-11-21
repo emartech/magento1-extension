@@ -12,7 +12,7 @@ describe('Products endpoint', function() {
     const { products, productCount } = await this.magentoApi.execute('products', 'get', {
       page,
       limit,
-      storeId: '0,1'
+      storeId: [0, 1]
     });
     const product = products[0];
 
@@ -44,7 +44,7 @@ describe('Products endpoint', function() {
     const page = 151;
     const limit = 1;
 
-    const { products } = await this.magentoApi.execute('products', 'get', { page, limit, storeId: '0,1' });
+    const { products } = await this.magentoApi.execute('products', 'get', { page, limit, storeId: [0, 1] });
     const product = products[0];
 
     expect(product.type).to.equal('configurable');
