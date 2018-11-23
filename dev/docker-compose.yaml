@@ -48,6 +48,7 @@ services:
     env_file:
       - .env
   node:
+    container_name: mage1_node
     build:
       context: .
       dockerfile: ./Docker/Dockerfile-node

@@ -1,4 +1,4 @@
-COMPOSE=docker-compose -f $(COMPOSE_FILE) -p mage
+COMPOSE=docker-compose -f $(COMPOSE_FILE) -p mage1
 
 test: mocha run-e2e
 
@@ -28,10 +28,10 @@ run-docker-e2e-debug:
 	-@$(COMPOSE) run --rm node npm run e2e:debug
 
 open-local-e2e:
-	-CYPRESS_baseUrl=http://magento-test.local:8889 ./dev/test/node_modules/.bin/cypress open --project ./dev/test/
+	-CYPRESS_baseUrl=http://magento1-test.local:8887 ./dev/test/node_modules/.bin/cypress open --project ./dev/test/
 
 run-local-e2e:
-	-CYPRESS_baseUrl=http://magento-test.local:8889 ./dev/test/node_modules/.bin/cypress run --project ./dev/test/
+	-CYPRESS_baseUrl=http://magento1-test.local:8887 ./dev/test/node_modules/.bin/cypress run --project ./dev/test/
 
 run-npmt:
 	-@$(COMPOSE) run --rm node npm t
@@ -43,10 +43,10 @@ quick-e2e: ## Runs tests
 	-@$(COMPOSE) run --rm -e "QUICK_TEST=true" node npm run e2e
 
 set-local-baseurl:
-	@$(COMPOSE) exec --user application magento-test bash -c "bin/magento config:set web/unsecure/base_url http://magento-test.local:8889/"
+	@$(COMPOSE) exec --user application magento-test bash -c "bin/magento config:set web/unsecure/base_url http://magento1-test.local:8887/"
 
 set-docker-baseurl:
-	@$(COMPOSE) exec --user application magento-test bash -c "bin/magento config:set web/unsecure/base_url http://magento-test.local/"
+	@$(COMPOSE) exec --user application magento-test bash -c "bin/magento config:set web/unsecure/base_url http://magento1-test.local/"
 
 codesniffer:
 	@$(COMPOSE) exec --user application magento-dev bash -c "sh vendor/emartech/emarsys-magento2-extension/dev/codesniffer.sh"

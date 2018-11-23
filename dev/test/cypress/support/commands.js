@@ -16,47 +16,49 @@ Cypress.Commands.add('shouldNotExistsEvents', () => {
   });
 });
 
-Cypress.Commands.add('loginWithCustomer', ({ customer }) => {
-  cy.visit('/index.php/customer/account/login');
-  cy.wait(2000);
+Cypress.Commands.add('registerCustomer', ({ email, password }) => {
+  cy.visit('/customer/account/create/');
+  cy.get('#firstname').type('Customer');
+  cy.get('#lastname').type('Events');
+  cy.get('#email_address').type(email);
+  cy.get('#password').type(password);
+  cy.get('#confirmation').type(password);
+  cy.get('#is_subscribed').check();
 
-  cy.get('input[name="login[username]"]').type(customer.email);
-  cy.get('input[name="login[password]"]').type(customer.password);
-  cy.get('button.login').click();
+  cy.get('.button[title="Register"]').click();
 
-  cy.wait(3000);
-  cy.get('.customer-name').should('be.visible');
+  cy.get('.success-msg');
 });
 
-Cypress.Commands.add('logout', () => {
-  cy.visit('/');
-  cy.get('.customer-name').click();
+// Cypress.Commands.add('logout', () => {
+//   cy.visit('/');
+//   cy.get('.customer-name').click();
 
-  cy.contains('Sign Out').click();
-});
+//   cy.contains('Sign Out').click();
+// });
 
-Cypress.Commands.add('shouldNotShowErrorMessage', (excludeErrorMessage) => {
-  if (excludeErrorMessage) {
-    return cy.get('[data-ui-id="message-error"]').invoke('text').should('contain', excludeErrorMessage);
-  } else {
-    return cy.get('[data-ui-id="message-error"]').should('not.be.visible');
-  }
-});
+// Cypress.Commands.add('shouldNotShowErrorMessage', (excludeErrorMessage) => {
+//   if (excludeErrorMessage) {
+//     return cy.get('[data-ui-id="message-error"]').invoke('text').should('contain', excludeErrorMessage);
+//   } else {
+//     return cy.get('[data-ui-id="message-error"]').should('not.be.visible');
+//   }
+// });
 
 Cypress.Commands.add('clog', (logObject) => {
   cy.task('log', logObject);
 });
 
-Cypress.Commands.add('isSubscribed', (email, doubleOptin) => {
-  const expectedStatus = doubleOptin ? 2 : 1;
-  cy.task('getSubscription', email).then((subscription) => {
-    expect(subscription.subscriber_status).to.be.equal(expectedStatus);
-  });
-});
+// Cypress.Commands.add('isSubscribed', (email, doubleOptin) => {
+//   const expectedStatus = doubleOptin ? 2 : 1;
+//   cy.task('getSubscription', email).then((subscription) => {
+//     expect(subscription.subscriber_status).to.be.equal(expectedStatus);
+//   });
+// });
 
-Cypress.Commands.add('isNotSubscribed', (email) => {
-  cy.task('getSubscription', email).then((subscription) => {
-    expect(subscription.subscriber_status).to.not.equal(1);
-    expect(subscription.subscriber_status).to.not.equal(2);
-  });
-});
+// Cypress.Commands.add('isNotSubscribed', (email) => {
+//   cy.task('getSubscription', email).then((subscription) => {
+//     expect(subscription.subscriber_status).to.not.equal(1);
+//     expect(subscription.subscriber_status).to.not.equal(2);
+//   });
+// });

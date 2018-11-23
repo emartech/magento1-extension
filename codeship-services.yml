@@ -47,8 +47,8 @@ node:
   cached: true
   encrypted_env_file: codeship.env.encrypted
 deployment:
- image: codeship/google-cloud-deployment
- encrypted_env_file: codeship.env.encrypted
- add_docker: true
- volumes:
-   - ./dev/Deploy/restart.sh:/deploy/restart.sh
+  image: codeship/google-cloud-deployment
+  encrypted_env_file: codeship.env.encrypted
+  add_docker: true
+  volumes:
+    - ./dev/Deploy/restart.sh:/deploy/restart.sh
