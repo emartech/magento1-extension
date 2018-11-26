@@ -44,7 +44,7 @@ class Emartech_Emarsys_Model_Subscriptions
         $websiteIds = $request->getParam('website_id', []);
         $storeIds = $request->getParam('store_id', []);
         $subscribed = $request->getParam('subscribed', null);
-        $onlyGuest = $request->getParam('only_quest', false);
+        $onlyGuest = $request->getParam('only_guest', false);
         $page = $request->getParam('page', 0);
         $pageSize = $request->getParam('page_size', 1000);
 

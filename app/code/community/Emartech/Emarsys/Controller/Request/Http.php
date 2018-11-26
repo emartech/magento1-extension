@@ -52,7 +52,27 @@ class Emartech_Emarsys_Controller_Request_Http
     {
         $this->getParams();
         $keyName = $this->_decamelize($key);
-        return isset($this->_params[$keyName]) ? $this->_params[$keyName] : $default;
+
+        $paramValue = isset($this->_params[$keyName]) ? $this->_params[$keyName] : $default;
+
+        return $this->_parseParamValue($paramValue);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return mixed
+     */
+    private function _parseParamValue($value)
+    {
+        if (strtolower($value) === 'true') {
+            return true;
+        }
+        if (strtolower($value) === 'false') {
+            return false;
+        }
+
+        return $value;
     }
 
     /**
