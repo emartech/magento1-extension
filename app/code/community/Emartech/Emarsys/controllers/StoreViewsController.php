@@ -5,24 +5,25 @@
  */
 
 /**
- * Class Emartech_Emarsys_SystemController
+ * Class Emartech_Emarsys_StoreViewsController
  */
-class Emartech_Emarsys_SystemController
+class Emartech_Emarsys_StoreViewsController
     extends Emartech_Emarsys_Controller_AbstractController
     implements Emartech_Emarsys_Controller_GetControllerInterface
 {
     /**
-     * @return Emartech_Emarsys_Model_System
+     * @return Emartech_Emarsys_Model_Storeviews
      */
     public function getModel()
     {
-        return Mage::getModel('emartech_emarsys/system');
+        return Mage::getModel('emartech_emarsys/storeviews');
     }
 
     /**
      * @return array
      */
-    public function handleGet(){
+    public function handleGet()
+    {
         return $this->getModel()->handleGet($this->_apiRequest);
     }
 }

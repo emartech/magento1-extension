@@ -7,7 +7,8 @@
 /**
  * Class Emartech_Emarsys_SubscriptionsController
  */
-class Emartech_Emarsys_SubscriptionsController extends Emartech_Emarsys_Controller_AbstractController
+class Emartech_Emarsys_SubscriptionsController
+    extends Emartech_Emarsys_Controller_AbstractController
     implements Emartech_Emarsys_Controller_GetControllerInterface, Emartech_Emarsys_Controller_PostControllerInterface
 {
     /**
@@ -15,7 +16,7 @@ class Emartech_Emarsys_SubscriptionsController extends Emartech_Emarsys_Controll
      */
     public function getModel()
     {
-        return Mage::getModel('emartech_emarsys/subscriptions');;
+        return Mage::getModel('emartech_emarsys/subscriptions');
     }
 
     /**

@@ -7,7 +7,8 @@
 /**
  * Class Emartech_Emarsys_ProductsController
  */
-class Emartech_Emarsys_ProductsController extends Emartech_Emarsys_Controller_AbstractController
+class Emartech_Emarsys_ProductsController
+    extends Emartech_Emarsys_Controller_AbstractController
     implements Emartech_Emarsys_Controller_GetControllerInterface
 {
     /**
