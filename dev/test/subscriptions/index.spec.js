@@ -227,7 +227,7 @@ describe('Subscriptions api', function() {
       );
     });
 
-    it.skip('should filter for not customers', async function() {
+    it('should filter for not customers', async function() {
       const expectedSubscriptions = {
         subscriptions: [
           {
@@ -255,7 +255,7 @@ describe('Subscriptions api', function() {
       });
 
       expect(actualSubscriptions.total_count).to.be.eql(expectedSubscriptions.total_count);
-      expect(actualSubscriptions.subscriptions).to.containSubset(expectedSubscriptions.subscriptions);
+      expect(actualSubscriptions.subscriptions).to.containSubset(stringifyNumbers(expectedSubscriptions.subscriptions));
     });
   });
 });
