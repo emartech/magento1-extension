@@ -21,7 +21,7 @@ class Emartech_Emarsys_Helper_Event_Order extends Emartech_Emarsys_Helper_Event_
     {
         $storeId = $order->getStoreId();
 
-        if (!$this->isEnabledForStore($storeId)) {
+        if (!$this->isEnabledForStore($storeId, Emartech_Emarsys_Helper_Config::SALES_EVENTS)) {
             return false;
         }
 

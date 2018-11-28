@@ -69,22 +69,24 @@ class Emartech_Emarsys_Helper_Event_Base extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @param int $websiteId
+     * @param int    $websiteId
+     * @param string $eventType
      *
      * @return bool
      */
-    protected function isEnabledForWebsite($websiteId)
+    protected function isEnabledForWebsite($websiteId, $eventType)
     {
-        return $this->getConfigHelper()->isEnabledForWebsite(Emartech_Emarsys_Helper_Config::CUSTOMER_EVENTS, $websiteId);
+        return $this->getConfigHelper()->isEnabledForWebsite($eventType, $websiteId);
     }
 
     /**
-     * @param int $storeId
+     * @param int    $storeId
+     * @param string $eventType
      *
      * @return bool
      */
-    protected function isEnabledForStore($storeId)
+    protected function isEnabledForStore($storeId, $eventType)
     {
-        return $this->getConfigHelper()->isEnabledForStore(Emartech_Emarsys_Helper_Config::SALES_EVENTS, $storeId);
+        return $this->getConfigHelper()->isEnabledForStore($eventType, $storeId);
     }
 }

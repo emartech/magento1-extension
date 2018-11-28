@@ -48,6 +48,14 @@
                     </emarsys_checkout_onepage_controller_success_action>
                 </observers>
             </checkout_onepage_controller_success_action>
+            <customer_register_success>
+                <observers>
+                    <emarsys_customer_register_success>
+                        <class>emartech_emarsys/observer_marketing</class>
+                        <method>customerRegisterSuccess</method>
+                    </emarsys_customer_register_success>
+                </observers>
+            </customer_register_success>
             <customer_save_commit_after>
                 <observers>
                     <emarsys_customer_save_commit_after>
@@ -70,6 +78,10 @@
                         <class>emartech_emarsys/observer_event</class>
                         <method>newsletterSubscriberSaveAfter</method>
                     </emarsys_newsletter_subscriber_save_after>
+                    <emarsys_newsletter_subscriber_save_after_marketing>
+                        <class>emartech_emarsys/observer_marketing</class>
+                        <method>newsletterSubscriberSaveAfter</method>
+                    </emarsys_newsletter_subscriber_save_after_marketing>
                 </observers>
             </newsletter_subscriber_save_after>
             <newsletter_subscriber_delete_after>
@@ -78,6 +90,10 @@
                         <class>emartech_emarsys/observer_event</class>
                         <method>newsletterSubscriberSaveAfter</method>
                     </emarsys_newsletter_subscriber_delete_after>
+                    <emarsys_newsletter_subscriber_delete_after_marketing>
+                        <class>emartech_emarsys/observer_marketing</class>
+                        <method>newsletterSubscriberDeleteAfter</method>
+                    </emarsys_newsletter_subscriber_delete_after_marketing>
                 </observers>
             </newsletter_subscriber_delete_after>
             <sales_order_save_after>
@@ -88,6 +104,38 @@
                     </emarsys_sales_order_save_after>
                 </observers>
             </sales_order_save_after>
+            <sales_order_place_after>
+                <observers>
+                    <emarsys_sales_order_place_after>
+                        <class>emartech_emarsys/observer_marketing</class>
+                        <method>salesOrderPlaceAfter</method>
+                    </emarsys_sales_order_place_after>
+                </observers>
+            </sales_order_place_after>
+            <sales_order_invoice_save_after>
+                <observers>
+                    <emarsys_ssales_order_invoice_save_after>
+                        <class>emartech_emarsys/observer_marketing</class>
+                        <method>salesOrderInvoiceSaveAfter</method>
+                    </emarsys_ssales_order_invoice_save_after>
+                </observers>
+            </sales_order_invoice_save_after>
+            <sales_order_shipment_save_after>
+                <observers>
+                    <emarsys_sales_order_shipment_save_after>
+                        <class>emartech_emarsys/observer_marketing</class>
+                        <method>salesOrderShipmentSaveAfter</method>
+                    </emarsys_sales_order_shipment_save_after>
+                </observers>
+            </sales_order_shipment_save_after>
+            <sales_order_creditmemo_save_after>
+                <observers>
+                    <emarsys_sales_order_creditmemo_save_after>
+                        <class>emartech_emarsys/observer_marketing</class>
+                        <method>salesOrderCreditmemoSaveAfter</method>
+                    </emarsys_sales_order_creditmemo_save_after>
+                </observers>
+            </sales_order_creditmemo_save_after>
         </events>
     </global>
     <frontend>
