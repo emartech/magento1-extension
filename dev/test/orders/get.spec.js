@@ -16,10 +16,10 @@ describe('Orders endpoint', function() {
     expect(ordersResponse.orderCount).to.be.equal(orderCount);
     expect(ordersResponse.orders.length).to.be.equal(limit);
     expect(ordersResponse.lastPage).to.be.equal(orderCount / limit);
-    expect(ordersResponse.pageSize).to.be.equal(limit.toString());
+    expect(ordersResponse.pageSize).to.be.equal(limit);
     expect(ordersResponse.currentPage).to.be.equal(page);
     expect(ordersResponse.orders[0]).to.have.property('entity_id');
-    expect(ordersResponse.orders[0].store_id).to.equal('1');
+    expect(ordersResponse.orders[0].store_id).to.equal(1);
   });
 
   it('should handle multiple store IDs', async function() {

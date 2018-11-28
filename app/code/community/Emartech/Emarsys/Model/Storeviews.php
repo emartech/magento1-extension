@@ -23,11 +23,11 @@ class Emartech_Emarsys_Model_Storeviews extends Emartech_Emarsys_Model_Abstract_
         /** @var Mage_Core_Model_Store $storeView */
         foreach ($storeViews as $storeView) {
             $returnArray[] = [
-                'id'             => $storeView->getId(),
+                'id'             => (int) $storeView->getId(),
                 'code'           => $storeView->getCode(),
                 'name'           => $storeView->getName(),
-                'website_id'     => $storeView->getWebsiteId(),
-                'store_group_id' => $storeView->getGroupId(),
+                'website_id'     => (int) $storeView->getWebsiteId(),
+                'store_group_id' => (int) $storeView->getGroupId(),
             ];
         }
 

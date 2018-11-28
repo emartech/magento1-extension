@@ -62,6 +62,24 @@ class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract_B
     ];
 
     /**
+     * @var array
+     */
+    private $numericFields = [
+      'entity_id',
+      'entity_type_id',
+      'attribute_set_id',
+      'website_id',
+      'group_id',
+      'store_id',
+      'is_active',
+      'disable_auto_group_change',
+      'accepts_marketing',
+      'gender',
+      'default_shipping',
+      'default_billing'
+    ];
+
+    /**
      * @param Emartech_Emarsys_Controller_Request_Http $request
      *
      * @return array
@@ -86,7 +104,7 @@ class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract_B
         return [
             'current_page' => $this->_collection->getCurPage(),
             'last_page'    => $this->_collection->getLastPageNumber(),
-            'page_size'    => $this->_collection->getPageSize(),
+            'page_size'    => (int) $this->_collection->getPageSize(),
             'total_count'  => $this->_collection->getSize(),
             'customers'    => $this->_handleCustomers(),
         ];
@@ -113,12 +131,15 @@ class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract_B
     private function _parseCustomer($customer)
     {
         $returnArray = [
-            'id'               => $customer->getId(),
+            'id'               => (int) $customer->getId(),
             'billing_address'  => $this->_getAddressFromCustomer($customer, 'billing'),
             'shipping_address' => $this->_getAddressFromCustomer($customer, 'shipping'),
         ];
 
         foreach ($customer->getData() as $key => $value) {
+            if (in_array($key, $this->numericFields, true)) {
+                $value = (int) $value;
+            }
             $returnArray[$key] = $value;
         }
 

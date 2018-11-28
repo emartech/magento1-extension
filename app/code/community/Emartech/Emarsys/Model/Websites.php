@@ -23,10 +23,10 @@ class Emartech_Emarsys_Model_Websites extends Emartech_Emarsys_Model_Abstract_Ba
         /** @var Mage_Core_Model_Website $website */
         foreach ($websites as $website) {
             $returnArray[] = [
-                'id'               => $website->getId(),
+                'id'               => (int) $website->getId(),
                 'code'             => $website->getCode(),
                 'name'             => $website->getName(),
-                'default_group_id' => $website->getDefaultGroupId(),
+                'default_group_id' => (int) $website->getDefaultGroupId(),
             ];
         }
 

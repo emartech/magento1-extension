@@ -201,8 +201,8 @@ class Emartech_Emarsys_Model_Categories extends Emartech_Emarsys_Model_Abstract_
         foreach ($this->_collection as $category) {
             $returnArray[] = [
                 'path'           => $category->getPath(),
-                'entity_id'      => $category->getId(),
-                'children_count' => $category->getChildrenCount(),
+                'entity_id'      => (int) $category->getId(),
+                'children_count' => (int) $category->getChildrenCount(),
                 'store_data'     => $this->_handleCategoryStoreData($category),
             ];
         }
@@ -222,7 +222,7 @@ class Emartech_Emarsys_Model_Categories extends Emartech_Emarsys_Model_Abstract_
         foreach ($this->_storeIds as $storeId => $storeObject) {
             $returnArray[] = [
                 'store_id'    => $storeId,
-                'is_active'   => $category->getData($this->_getAttributeValueAlias('is_active', $storeId)),
+                'is_active'   => (int) $category->getData($this->_getAttributeValueAlias('is_active', $storeId)),
                 'image'       => $this->_handleImage($category, $storeObject),
                 'name'        => $category->getData($this->_getAttributeValueAlias('name', $storeId)),
                 'description' => $category->getData($this->_getAttributeValueAlias('description', $storeId)),

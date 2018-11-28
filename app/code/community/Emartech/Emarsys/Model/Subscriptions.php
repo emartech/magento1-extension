@@ -23,6 +23,16 @@ class Emartech_Emarsys_Model_Subscriptions
     private $_sharingConfig = null;
 
     /**
+     * @var array
+     */
+    private $numericFields = [
+      'website_id',
+      'store_id',
+      'customer_id',
+      'subscriber_id'
+    ];
+
+    /**
      * @return Mage_Customer_Model_Config_Share
      */
     private function _getSharingConfig()
@@ -193,6 +203,9 @@ class Emartech_Emarsys_Model_Subscriptions
         $returnArray = [];
 
         foreach ($subscription->getData() as $key => $value) {
+            if (in_array($key, $this->numericFields, true)) {
+                $value = (int) $value;
+            }
             $returnArray[$key] = $value;
         }
 

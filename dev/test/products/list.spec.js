@@ -19,13 +19,13 @@ describe('Products endpoint', function() {
     expect(products.length).to.equal(10);
     expect(productCount).to.equal(593);
 
-    expect(product.entity_id).to.equal('251');
+    expect(product.entity_id).to.equal(251);
     expect(product.type).to.equal('simple');
     expect(product.children_entity_ids).to.be.an('array');
     expect(product.categories[0]).to.be.equal('1/2/5/16');
     expect(product.sku).to.equal('mtk002');
-    expect(product.qty).to.equal('25.0000');
-    expect(product.is_in_stock).to.equal('1');
+    expect(product.qty).to.equal(25);
+    expect(product.is_in_stock).to.equal(1);
     expect(product.images).to.eql({
       image: `http://${this.hostname}/media/catalog/product/m/t/mtk002t_3.jpg`,
       small_image: `http://${this.hostname}/media/catalog/product/m/t/mtk002t_3.jpg`,
@@ -34,9 +34,9 @@ describe('Products endpoint', function() {
 
     const storeLevelProduct = product.store_data[0];
     expect(storeLevelProduct.name).to.equal('Chelsea Tee');
-    expect(storeLevelProduct.price).to.equal('75.0000');
+    expect(storeLevelProduct.price).to.equal(75.0000);
     expect(storeLevelProduct.link).to.include('/index.php/chelsea-tee.html');
-    expect(storeLevelProduct.status).to.equal('1');
+    expect(storeLevelProduct.status).to.equal(1);
     expect(storeLevelProduct.description).to.equal('Ultrasoft, lightweight V-neck tee. 100% cotton. Machine wash.');
   });
 

@@ -64,5 +64,6 @@ describe('Events API endpoint', function() {
     const firstEvent = eventsInDb[0];
     expect(firstEvent.website_id).to.equal(1);
     expect(firstEvent.store_id).to.equal(1);
+    expect(firstEvent.event_id).to.equal(2);
   });
 });

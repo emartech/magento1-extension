@@ -16,6 +16,16 @@ class Emartech_Emarsys_Model_Events extends Emartech_Emarsys_Model_Abstract_Base
     private $_collection = null;
 
     /**
+     * @var array
+     */
+    private $numericFields = [
+      'event_id',
+      'website_id',
+      'store_id',
+      'entity_id'
+    ];
+
+    /**
      * @param Emartech_Emarsys_Controller_Request_Http $request
      *
      * @return array
@@ -69,6 +79,9 @@ class Emartech_Emarsys_Model_Events extends Emartech_Emarsys_Model_Abstract_Base
         $returnArray = [];
 
         foreach ($event->getData() as $key => $value) {
+            if (in_array($key, $this->numericFields, true)) {
+                $value = (int) $value;
+            }
             $returnArray[$key] = $value;
         }
 

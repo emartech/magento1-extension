@@ -162,9 +162,9 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
                 'type'                => $product->getTypeId(),
                 'categories'          => $this->_handleCategories($product),
                 'children_entity_ids' => $this->_handleChildrenEntityIds($product),
-                'entity_id'           => $product->getId(),
-                'is_in_stock'         => $this->_handleStock($product),
-                'qty'                 => $this->_handleQty($product),
+                'entity_id'           => (int) $product->getId(),
+                'is_in_stock'         => (int) $this->_handleStock($product),
+                'qty'                 => (int) $this->_handleQty($product),
                 'sku'                 => $product->getSku(),
                 'images'              => $this->_handleImages($product),
                 'store_data'          => $this->_handleProductStoreData($product),
@@ -472,12 +472,12 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
         foreach ($this->_storeIds as $storeId => $storeObject) {
             $returnArray[] = [
                 'store_id'      => $storeId,
-                'status'        => $product->getData($this->_getAttributeValueAlias('status', $storeId)),
+                'status'        => (int) $product->getData($this->_getAttributeValueAlias('status', $storeId)),
                 'description'   => $product->getData($this->_getAttributeValueAlias('description', $storeId)),
                 'link'          => $this->_handleLink($product, $storeObject),
                 'name'          => $product->getData($this->_getAttributeValueAlias('name', $storeId)),
-                'price'         => $this->_handlePrice($product, $storeObject),
-                'display_price' => $this->_handleDisplayPrice($product, $storeObject),
+                'price'         => (float) $this->_handlePrice($product, $storeObject),
+                'display_price' => (float) $this->_handleDisplayPrice($product, $storeObject),
                 'currency_code' => $this->_getCurrencyCode($storeObject),
             ];
         }

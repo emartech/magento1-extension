@@ -14,17 +14,6 @@ const isSubscribed = subscription => {
   return subscription !== undefined && subscription.subscriber_status === 1;
 };
 
-const stringifyNumbers = object => {
-  for (const key in object) {
-    if (object.hasOwnProperty(key) && typeof object[key] === 'object') {
-      object[key] = stringifyNumbers(object[key]);
-    } else if (object.hasOwnProperty(key) && !isNaN(object[key])) {
-      object[key] = object[key].toString();
-    }
-  }
-  return object;
-};
-
 const noCustomerEmail = 'no-customer@a.com';
 const noCustomerEmail2 = 'still-no-customer@a.com';
 const customerEmail = 'roni_cost@example.com';
@@ -155,7 +144,7 @@ describe('Subscriptions api', function() {
       const actualSubscriptions = await this.magentoApi.execute('subscriptions', 'list', { websiteId });
 
       expect(actualSubscriptions.total_count).to.be.eql(expectedSubscriptions.total_count);
-      expect(actualSubscriptions.subscriptions).to.containSubset(stringifyNumbers(expectedSubscriptions.subscriptions));
+      expect(actualSubscriptions.subscriptions).to.containSubset(expectedSubscriptions.subscriptions);
     });
 
     it('should filter with subscribed status true', async function() {
@@ -187,9 +176,7 @@ describe('Subscriptions api', function() {
         websiteId
       });
 
-      expect(actualSubscriptions.subscriptions).to.be.containSubset(
-        stringifyNumbers(expectedSubscriptions.subscriptions)
-      );
+      expect(actualSubscriptions.subscriptions).to.be.containSubset(expectedSubscriptions.subscriptions);
     });
 
     it('should filter with subscribed false', async function() {
@@ -222,9 +209,7 @@ describe('Subscriptions api', function() {
         websiteId
       });
 
-      expect(actualSubscriptions.subscriptions).to.be.containSubset(
-        stringifyNumbers(expectedSubscriptions.subscriptions)
-      );
+      expect(actualSubscriptions.subscriptions).to.be.containSubset(expectedSubscriptions.subscriptions);
     });
 
     it('should filter for not customers', async function() {
@@ -255,7 +240,7 @@ describe('Subscriptions api', function() {
       });
 
       expect(actualSubscriptions.total_count).to.be.eql(expectedSubscriptions.total_count);
-      expect(actualSubscriptions.subscriptions).to.containSubset(stringifyNumbers(expectedSubscriptions.subscriptions));
+      expect(actualSubscriptions.subscriptions).to.containSubset(expectedSubscriptions.subscriptions);
     });
   });
 });
