@@ -1,0 +1,22 @@
+<?php
+/** @var Emartech_Emarsys_Block_Snipets $this */
+?>
+<?php $injectable = $this->isInjectable(); ?>
+<?php if ($injectable) : ?>
+    <script type="text/javascript">
+        var ScarabQueue = ScarabQueue || [];
+        (function(id) {
+            if (document.getElementById(id)) return;
+            var js = document.createElement('script'); js.id = id;
+            js.src = '//cdn.scarabresearch.com/js/<?php echo $this->getMerchantId(); ?>/scarab-v2.js';
+            var fs = document.getElementsByTagName('script')[0];
+            fs.parentNode.insertBefore(js, fs);
+        })('scarab-js-api');
+    </script>
+    <script src="<?php echo $this->getSnippetUrl(); ?>"></script>
+    <script>
+        window.Emarsys = window.Emarsys || {};
+        window.Emarsys.Magento = window.Emarsys.Magento || {};
+        window.Emarsys.Magento.track(<?php echo json_encode($this->getTrackingData()); ?>);
+    </script>
+<?php endif; ?>

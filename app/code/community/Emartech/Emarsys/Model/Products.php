@@ -142,11 +142,11 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
         $lastPageNumber = ceil($this->_numberOfItems / $pageSize);
 
         return [
-            'current_page'  => $page,
-            'last_page'     => $lastPageNumber,
-            'page_size'     => $pageSize,
-            'total_count'   => $this->_numberOfItems,
-            'products' => $this->_handleProducts(),
+            'current_page' => (int)$page,
+            'last_page'    => (int)$lastPageNumber,
+            'page_size'    => (int)$pageSize,
+            'total_count'  => (int)$this->_numberOfItems,
+            'products'     => $this->_handleProducts(),
         ];
     }
 

@@ -9,7 +9,7 @@
  */
 class Emartech_Emarsys_Helper_Config extends Mage_Core_Helper_Abstract
 {
-    const XML_PATH_STORE_CONFIG_PRE_TAG = 'emartech/emarsys/config/';
+    const XML_PATH_STORE_CONFIG_PRE_TAG = 'emartech_emarsys/config/';
 
     const CONFIG_ENABLED  = 'enabled';
     const CONFIG_DISABLED = 'disabled';
@@ -25,6 +25,8 @@ class Emartech_Emarsys_Helper_Config extends Mage_Core_Helper_Abstract
     const STORE_SETTINGS = 'store_settings';
 
     const SCOPE_TYPE_DEFAULT = 'websites';
+
+    const LAST_ORDER_ID_REGISTER_KEY = 'emarsys_emartech_last_order_id';
 
     /**
      * @param string   $key
@@ -97,7 +99,7 @@ class Emartech_Emarsys_Helper_Config extends Mage_Core_Helper_Abstract
             $stores = json_decode($this->getWebsiteConfigValue(self::STORE_SETTINGS, $websiteId), true);
 
             foreach ($stores as $store) {
-                if ($store['id'] == $storeId) {
+                if ($store['store_id'] == $storeId) {
                     return true;
                 }
             }

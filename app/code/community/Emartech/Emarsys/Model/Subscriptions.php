@@ -72,10 +72,10 @@ class Emartech_Emarsys_Model_Subscriptions
         }
 
         return [
-            'current_page'  => $this->_collection->getCurPage(),
-            'last_page'     => $this->_collection->getLastPageNumber(),
-            'page_size'     => $this->_collection->getPageSize(),
-            'total_count'   => $this->_collection->getSize(),
+            'current_page'  => (int)$this->_collection->getCurPage(),
+            'last_page'     => (int)$this->_collection->getLastPageNumber(),
+            'page_size'     => (int)$this->_collection->getPageSize(),
+            'total_count'   => (int)$this->_collection->getSize(),
             'subscriptions' => $this->_handleSubscriptions(),
         ];
     }

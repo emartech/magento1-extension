@@ -40,6 +40,14 @@
             </emartech_emarsys_setup>
         </resources>
         <events>
+            <checkout_onepage_controller_success_action>
+                <observers>
+                    <emarsys_checkout_onepage_controller_success_action>
+                        <class>emartech_emarsys/observer_order_success</class>
+                        <method>checkoutOnepageControllerSuccessAction</method>
+                    </emarsys_checkout_onepage_controller_success_action>
+                </observers>
+            </checkout_onepage_controller_success_action>
             <customer_save_commit_after>
                 <observers>
                     <emarsys_customer_save_commit_after>
@@ -92,5 +100,12 @@
                 </args>
             </emarsys>
         </routers>
+        <layout>
+            <updates>
+                <emarsys>
+                    <file>emarsys.xml</file>
+                </emarsys>
+            </updates>
+        </layout>
     </frontend>
 </config>
