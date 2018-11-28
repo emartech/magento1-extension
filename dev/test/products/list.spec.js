@@ -19,7 +19,7 @@ describe('Products endpoint', function() {
     expect(products.length).to.equal(10);
     expect(productCount).to.equal(593);
 
-    expect(product.entity_id).to.equal(251);
+    expect(product.id).to.equal(251);
     expect(product.type).to.equal('simple');
     expect(product.children_entity_ids).to.be.an('array');
     expect(product.categories[0]).to.be.equal('1/2/5/16');
