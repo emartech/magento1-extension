@@ -16,26 +16,31 @@ Cypress.Commands.add('shouldNotExistsEvents', () => {
   });
 });
 
-Cypress.Commands.add('registerCustomer', ({ email, password }) => {
-  cy.visit('/customer/account/create/');
+Cypress.Commands.add('registerCustomer', ({ email, password, subscription = false }) => {
+  cy.visit('customer/account/create/');
   cy.get('#firstname').type('Customer');
   cy.get('#lastname').type('Events');
   cy.get('#email_address').type(email);
   cy.get('#password').type(password);
   cy.get('#confirmation').type(password);
-  cy.get('#is_subscribed').check();
+
+  if (subscription) {
+    cy.get('#is_subscribed').check();
+  }
 
   cy.get('.button[title="Register"]').click();
 
   cy.get('.success-msg');
 });
 
-// Cypress.Commands.add('logout', () => {
-//   cy.visit('/');
-//   cy.get('.customer-name').click();
+Cypress.Commands.add('login', ({ email, password }) => {
+  cy.visit('customer/account/login/');
 
-//   cy.contains('Sign Out').click();
-// });
+  cy.get('#login-form #email').type(email);
+  cy.get('#login-form #pass').type(password);
+
+  cy.get('#send2[title="Login"]').click();
+});
 
 // Cypress.Commands.add('shouldNotShowErrorMessage', (excludeErrorMessage) => {
 //   if (excludeErrorMessage) {

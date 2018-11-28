@@ -2,8 +2,11 @@
 
 const getUid = () => Math.round(Math.random() * 100000);
 
-describe('Subscription Customer Events', function() {
+describe('Customer Events', function() {
   describe('setting is on', function() {
+    const email = `cypress-customer-on${getUid()}@events.com`;
+    const password = 'CustomerEvents123';
+
     before(function() {
       cy.task('setConfig', { websiteId: 1, config: { collectCustomerEvents: 'enabled' } });
     });
@@ -19,16 +22,26 @@ describe('Subscription Customer Events', function() {
     });
 
     it('should add customers/update to events for new customer', function() {
-      const email = `cypress-customer-on${getUid()}@events.com`;
-      const password = 'CustomerEvents123';
-
-      cy.registerCustomer({ email, password });
+      cy.registerCustomer({ email, password, subscription: true });
 
       cy.shouldCreateEvent('customers/update', { email: email, accepts_marketing: '1' });
+    });
+
+    it('should add customers/update to events for existing customer modified', function() {
+      cy.login({ email, password });
+
+      cy.get(':nth-child(3) > .col2-set > .col-2 > .box > .box-title > a').click();
+      cy.get('#subscription').uncheck();
+      cy.get('.button[title="Save"').click();
+
+      cy.shouldCreateEvent('customers/update', { email: email, accepts_marketing: '3' });
     });
   });
 
   describe('setting is off', function() {
+    const email = `cypress-customer-off${getUid()}@events.com`;
+    const password = 'CustomerEvents123';
+
     before(function() {
       cy.task('setConfig', { websiteId: 1, config: { collectCustomerEvents: 'disabled' } });
     });
@@ -44,10 +57,17 @@ describe('Subscription Customer Events', function() {
     });
 
     it('should not add customers/update to events for new customer', function() {
-      const email = `cypress-customer-off${getUid()}@events.com`;
-      const password = 'CustomerEvents123';
-
       cy.registerCustomer({ email, password });
+
+      cy.shouldNotExistsEvents();
+    });
+
+    it('should not add customers/update to events for existing customer modified', function() {
+      cy.login({ email, password });
+
+      cy.get(':nth-child(3) > .col2-set > .col-2 > .box > .box-title > a').click();
+      cy.get('#subscription').uncheck();
+      cy.get('.button[title="Save"').click();
 
       cy.shouldNotExistsEvents();
     });
