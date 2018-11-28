@@ -162,7 +162,7 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
                 'type'                => $product->getTypeId(),
                 'categories'          => $this->_handleCategories($product),
                 'children_entity_ids' => $this->_handleChildrenEntityIds($product),
-                'id'                  => (int) $product->getId(),
+                'entity_id'           => (int) $product->getId(),
                 'is_in_stock'         => (int) $this->_handleStock($product),
                 'qty'                 => (int) $this->_handleQty($product),
                 'sku'                 => $product->getSku(),
