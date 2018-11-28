@@ -40,10 +40,10 @@ describe('Config endpoint', function() {
         .select()
         .from('core_config_data')
         .where('scope_id', scopeId)
-        .andWhere('path', 'like', 'emartech/emarsys/config/%');
+        .andWhere('path', 'like', 'emartech_emarsys/config/%');
 
       for (const key in testConfig) {
-        const configItem = config.find(item => item.path === `emartech/emarsys/config/${dbKeys[key]}`);
+        const configItem = config.find(item => item.path === `emartech_emarsys/config/${dbKeys[key]}`);
         expect(configItem.value).to.be.equal(testConfig[key]);
       }
     });
@@ -62,7 +62,7 @@ describe('Config endpoint', function() {
         .select()
         .from('core_config_data')
         .where('scope_id', scopeId)
-        .andWhere('path', 'like', 'emartech/emarsys/config/store_settings')
+        .andWhere('path', 'like', 'emartech_emarsys/config/store_settings')
         .first();
 
       expect(config.value).to.be.equal(JSON.stringify(testConfig.storeSettings));
