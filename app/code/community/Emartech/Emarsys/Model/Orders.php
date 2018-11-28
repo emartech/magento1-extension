@@ -246,6 +246,7 @@ class Emartech_Emarsys_Model_Orders extends Emartech_Emarsys_Model_Abstract_Base
         /** @var Mage_Sales_Model_Order $order */
         foreach ($this->_collection as $order) {
             $orderData = $this->_castNumericFields($order->getData());
+            $orderData['id'] = $orderData['entity_id'];
             $returnArray[] = array_merge(
                 $orderData,
                 [
