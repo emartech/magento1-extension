@@ -79,6 +79,10 @@ class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base
     {
         $xmlPath = Emartech_Emarsys_Helper_Config::XML_PATH_STORE_CONFIG_PRE_TAG . trim($xmlPostPath, '/');
 
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+
         switch ($scope) {
             case Emartech_Emarsys_Helper_Config::SCOPE_TYPE_DEFAULT:
                 $oldConfigValue = Mage::app()->getWebsite($scopeId)->getConfig($xmlPath);
@@ -90,10 +94,6 @@ class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base
 
         if ($oldConfigValue == $value) {
             return false;
-        }
-
-        if (is_array($value)) {
-            $value = json_encode($value);
         }
 
         Mage::app()->getConfig()->saveConfig($xmlPath, $value, $scope, $scopeId);
