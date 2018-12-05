@@ -12,6 +12,10 @@ const dbKeys = {
 
 const scopeId = 1;
 describe('Config endpoint', function() {
+  before(async function() {
+    await this.clearStoreSettings(1);
+  });
+
   afterEach(async function() {
     await this.setDefaultConfig(1);
   });

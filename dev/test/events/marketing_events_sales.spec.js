@@ -310,12 +310,12 @@ describe.skip('Marketing events: sales', function() {
 
       describe('store is not enabled', function() {
         before(async function() {
-          await this.clearStoreSettings();
+          await this.clearStoreSettings(1);
           await this.db.truncate('emarsys_events_data');
         });
 
         after(async function() {
-          await this.setDefaultStoreSettings();
+          await this.setDefaultStoreSettings(1);
         });
 
         it('should not create event', async function() {

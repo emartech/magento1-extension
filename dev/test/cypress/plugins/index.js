@@ -78,6 +78,22 @@ module.exports = (on, config) => { // eslint-disable-line no-unused-vars
       }
       return response.data;
     },
+    setDoubleOptin: async (stateOn) => {
+      if (stateOn) {
+        return await db
+          .insert({
+            scope: 'default',
+            scope_id: 0,
+            path: 'newsletter/subscription/confirm',
+            value: 1
+          })
+          .into('core_config_data');
+      } else {
+        return await db('core_config_data')
+          .where({ path: 'newsletter/subscription/confirm' })
+          .delete();
+      }
+    },
     getEventTypeFromDb: async (eventType) => {
       const event = await db
         .select()

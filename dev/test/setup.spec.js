@@ -96,9 +96,9 @@ const setDefaultStoreSettings = magentoApi => async websiteId => {
   });
 };
 
-const clearStoreSettings = magentoApi => async () => {
+const clearStoreSettings = magentoApi => async (websiteId) => {
   return await magentoApi.setConfig({
-    websiteId: 1,
+    websiteId,
     config: {
       storeSettings: []
     }
@@ -139,11 +139,10 @@ before(async function() {
   });
 
   this.setDefaultConfig = setDefaultConfig(this.magentoApi);
+  this.clearStoreSettings = clearStoreSettings(this.magentoApi);
   this.setDefaultStoreSettings = setDefaultStoreSettings(this.magentoApi);
-  // this.clearStoreSettings = clearStoreSettings(this.magentoApi);
-  //
+  this.setDefaultStoreSettings(1);
   // await this.magentoApi.setDefaultConfig(1);
-  // await this.setDefaultStoreSettings();
   //
   // await setCurrencyConfig(this.db);
   //

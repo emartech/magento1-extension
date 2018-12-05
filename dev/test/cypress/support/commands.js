@@ -42,28 +42,20 @@ Cypress.Commands.add('login', ({ email, password }) => {
   cy.get('#send2[title="Login"]').click();
 });
 
-// Cypress.Commands.add('shouldNotShowErrorMessage', (excludeErrorMessage) => {
-//   if (excludeErrorMessage) {
-//     return cy.get('[data-ui-id="message-error"]').invoke('text').should('contain', excludeErrorMessage);
-//   } else {
-//     return cy.get('[data-ui-id="message-error"]').should('not.be.visible');
-//   }
-// });
-
 Cypress.Commands.add('clog', (logObject) => {
   cy.task('log', logObject);
 });
 
-// Cypress.Commands.add('isSubscribed', (email, doubleOptin) => {
-//   const expectedStatus = doubleOptin ? 2 : 1;
-//   cy.task('getSubscription', email).then((subscription) => {
-//     expect(subscription.subscriber_status).to.be.equal(expectedStatus);
-//   });
-// });
+Cypress.Commands.add('isSubscribed', (email, doubleOptin) => {
+  const expectedStatus = doubleOptin ? 2 : 1;
+  cy.task('getSubscription', email).then((subscription) => {
+    expect(subscription.subscriber_status).to.be.equal(expectedStatus);
+  });
+});
 
-// Cypress.Commands.add('isNotSubscribed', (email) => {
-//   cy.task('getSubscription', email).then((subscription) => {
-//     expect(subscription.subscriber_status).to.not.equal(1);
-//     expect(subscription.subscriber_status).to.not.equal(2);
-//   });
-// });
+Cypress.Commands.add('isNotSubscribed', (email) => {
+  cy.task('getSubscription', email).then((subscription) => {
+    expect(subscription.subscriber_status).to.not.equal(1);
+    expect(subscription.subscriber_status).to.not.equal(2);
+  });
+});

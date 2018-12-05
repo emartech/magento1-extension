@@ -76,11 +76,11 @@ describe.skip('Webextend scripts', function() {
 
     describe('store is not enabled', function() {
       before(async function() {
-        await this.clearStoreSettings();
+        await this.clearStoreSettings(1);
       });
 
       after(async function() {
-        await this.setDefaultStoreSettings();
+        await this.setDefaultStoreSettings(1);
       });
 
       it('should not be in the HTML', async function() {
