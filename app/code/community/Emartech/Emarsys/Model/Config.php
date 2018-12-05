@@ -41,13 +41,20 @@ class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base
         $config = $request->getParam('config', $this->_defaultConfig);
 
         try {
+
+            $foundDifference = false;
+
             foreach ($config as $key => $value) {
                 if (array_key_exists($key, $this->_convertableKeys)) {
                     $key = $this->_convertableKeys[$key];
                 }
-                $this->setConfigValue($key, $value, $websiteId);
+                if ($this->setConfigValue($key, $value, $websiteId)) {
+                    $foundDifference = true;
+                }
             }
-            $this->cleanScope();
+            if ($foundDifference) {
+                $this->cleanScope();
+            }
             $status = 'ok';
 
         } catch (Exception $e) {
@@ -64,17 +71,34 @@ class Emartech_Emarsys_Model_Config extends Emartech_Emarsys_Model_Abstract_Base
      * @param int    $scopeId
      * @param string $scope
      *
-     * @return void
+     * @return bool
+     * @throws Mage_Core_Exception
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function setConfigValue($xmlPostPath, $value, $scopeId, $scope = Emartech_Emarsys_Helper_Config::SCOPE_TYPE_DEFAULT)
     {
         $xmlPath = Emartech_Emarsys_Helper_Config::XML_PATH_STORE_CONFIG_PRE_TAG . trim($xmlPostPath, '/');
+
+        switch ($scope) {
+            case Emartech_Emarsys_Helper_Config::SCOPE_TYPE_DEFAULT:
+                $oldConfigValue = Mage::app()->getWebsite($scopeId)->getConfig($xmlPath);
+                break;
+            default:
+                $oldConfigValue = Mage::app()->getStore($scopeId)->getConfig($xmlPath);
+                break;
+        }
+
+        if ($oldConfigValue == $value) {
+            return false;
+        }
 
         if (is_array($value)) {
             $value = json_encode($value);
         }
 
         Mage::app()->getConfig()->saveConfig($xmlPath, $value, $scope, $scopeId);
+
+        return true;
     }
 
     /**
