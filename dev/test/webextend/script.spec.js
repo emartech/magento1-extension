@@ -4,7 +4,6 @@ const axios = require('axios');
 
 const getEmarsysSnippetContents = async path => {
   const response = await axios.get(`http://magento1-test.local/index.php/${path}`);
-  console.log(response.data.replace(/(?:\r\n|\r|\n)/g, ''));
   return response.data.replace(/(?:\r\n|\r|\n)/g, '');
 };
 
