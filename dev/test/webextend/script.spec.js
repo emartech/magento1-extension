@@ -1,20 +1,17 @@
 'use strict';
 
 const axios = require('axios');
-const cheerio = require('cheerio');
 
 const getEmarsysSnippetContents = async path => {
   const response = await axios.get(`http://magento1-test.local/index.php/${path}`);
-  const $ = cheerio.load(response.data);
-  return $('.emarsys-snippets')
-    .html()
-    .replace(/(?:\r\n|\r|\n)/g, '');
+  console.log(response.data.replace(/(?:\r\n|\r|\n)/g, ''));
+  return response.data.replace(/(?:\r\n|\r|\n)/g, '');
 };
 
-describe.skip('Webextend scripts', function() {
+describe('Webextend scripts', function() {
   describe('enabled', function() {
     beforeEach(async function() {
-      await this.magentoApi.setConfig({
+      await this.magentoApi.execute('config', 'set', {
         websiteId: 1,
         config: {
           injectSnippet: 'enabled',
@@ -32,44 +29,44 @@ describe.skip('Webextend scripts', function() {
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          `<script type="text/javascript">    var ScarabQueue = ScarabQueue || [];    (function(id) {      if (document.getElementById(id)) return;      var js = document.createElement('script'); js.id = id;      js.src = '//cdn.scarabresearch.com/js/123/scarab-v2.js';      var fs = document.getElementsByTagName('script')[0];      fs.parentNode.insertBefore(js, fs);    })('scarab-js-api');  </script>`
+          `<script type="text/javascript">        var ScarabQueue = ScarabQueue || [];        (function(id) {            if (document.getElementById(id)) return;            var js = document.createElement('script'); js.id = id;            js.src = '//cdn.scarabresearch.com/js/123/scarab-v2.js';            var fs = document.getElementsByTagName('script')[0];            fs.parentNode.insertBefore(js, fs);        })('scarab-js-api');    </script>    <script src="http://yolo.hu/script"></script>`
         )
       ).to.be.true;
 
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          '<script>Emarsys.Magento2.track({"product":false,"category":false,"store":{"merchantId":"123"},"search":false,"exchangeRate":2,"slug":"testslug"});</script>'
+          '<script>        window.Emarsys.Magento1.track({"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug"});    </script>'
         )
       ).to.be.true;
     });
 
     it('should include search term', async function() {
-      const emarsysSnippets = await getEmarsysSnippetContents('catalogsearch/result/?q=magento+is+shit');
+      const emarsysSnippets = await getEmarsysSnippetContents('catalogsearch/result/?q=yolo');
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          '<script>Emarsys.Magento2.track({"product":false,"category":false,"store":{"merchantId":"123"},"search":{"term":"magento is shit"},"exchangeRate":2,"slug":"testslug"});</script>'
+          '<script>        window.Emarsys.Magento1.track({"store":{"merchantId":"123"},"search":{"term":"yolo"},"exchangeRate":1,"slug":"testslug"});    </script>'
         )
       ).to.be.true;
     });
 
     it('should include category', async function() {
-      const emarsysSnippets = await getEmarsysSnippetContents('men/tops-men.html');
+      const emarsysSnippets = await getEmarsysSnippetContents('men/shirts.html');
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          '<script>Emarsys.Magento2.track({"product":false,"category":{"names":["Men","Tops"],"ids":["11","12"]},"store":{"merchantId":"123"},"search":false,"exchangeRate":2,"slug":"testslug"});</script>'
+          '<script src="http://yolo.hu/script"></script>    <script>        window.Emarsys.Magento1.track({"category":{"names":["Men","Shirts"],"ids":["5","15"]},"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug"});    </script>'
         )
       ).to.be.true;
     });
 
     it('should include product', async function() {
-      const emarsysSnippets = await getEmarsysSnippetContents('cassius-sparring-tank.html');
+      const emarsysSnippets = await getEmarsysSnippetContents('accessories/jewelry/swing-time-earrings.html');
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          '<script>Emarsys.Magento2.track({"product":{"sku":"MT12","id":"729"},"category":false,"store":{"merchantId":"123"},"search":false,"exchangeRate":2,"slug":"testslug"});</script>'
+          '<script src="http://yolo.hu/script"></script>    <script>        window.Emarsys.Magento1.track({"product":{"sku":"acj004","id":"552"},"category":{"names":["Accessories","Jewelry"],"ids":["6","19"]},"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug"});    </script>'
         )
       ).to.be.true;
     });
@@ -84,18 +81,18 @@ describe.skip('Webextend scripts', function() {
       });
 
       it('should not be in the HTML', async function() {
-        await this.magentoApi.setDefaultConfig(1);
+        await this.setDefaultConfig(1);
         const emarsysSnippets = await getEmarsysSnippetContents('customer/account/login/');
-        expect(emarsysSnippets).to.eql('');
+        expect(emarsysSnippets.includes('window.Emarsys.Magento1.track')).to.be.false;
       });
     });
   });
 
   describe('disabled', function() {
     it('should not be in the HTML if injectsnippet setting is disabled', async function() {
-      await this.magentoApi.setDefaultConfig(1);
+      await this.setDefaultConfig(1);
       const emarsysSnippets = await getEmarsysSnippetContents('customer/account/login/');
-      expect(emarsysSnippets).to.eql('');
+      expect(emarsysSnippets.includes('window.Emarsys.Magento1.track')).to.be.false;
     });
   });
 });
