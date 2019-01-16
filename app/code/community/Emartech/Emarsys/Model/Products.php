@@ -62,41 +62,12 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     /**
      * @var array
      */
-    private $_storeProductAttributeCodes = [
-        'name',
-        'price',
-        'url_key',
-        'description',
-        'status',
-        'currency',
-        'display_price',
-        'special_price',
-        'special_from_date',
-        'special_to_date',
-    ];
+    private $_stockData = [];
 
     /**
      * @var array
      */
-    private $_globalProductAttributeCodes = [
-        'entity_id',
-        'type',
-        'children_entity_ids',
-        'categories',
-        'sku',
-        'images',
-        'qty',
-        'is_in_stock',
-        'stores',
-        'image',
-        'small_image',
-        'thumbnail',
-    ];
-
-    /**
-     * @var array
-     */
-    private $_joinedAlias = [];
+    private $_attributeData = [];
 
     /**
      * @return void
@@ -133,8 +104,7 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
             ->_handleCategoryIds()
             ->_handleChildrenProductIds()
             ->_handleStockData()
-            ->_handleStockData()
-            ->_joinData()
+            ->_handleAttributes()
             ->_setWhere()
             ->_setOrder();
         $this->_productCollection->load();
@@ -157,16 +127,19 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     private function _handleProducts()
     {
         $productArray = [];
+        /** @var Mage_Catalog_Model_Product $product */
         foreach ($this->_productCollection as $product) {
+            $productId = (int)$product->getId();
+
             $productArray[] = [
                 'type'                => $product->getTypeId(),
-                'categories'          => $this->_handleCategories($product),
-                'children_entity_ids' => $this->_handleChildrenEntityIds($product),
-                'entity_id'           => (int) $product->getId(),
-                'is_in_stock'         => (int) $this->_handleStock($product),
-                'qty'                 => (int) $this->_handleQty($product),
+                'categories'          => $this->_handleCategories($productId),
+                'children_entity_ids' => $this->_handleChildrenEntityIds($productId),
+                'entity_id'           => $productId,
+                'is_in_stock'         => (int)$this->_handleStock($productId),
+                'qty'                 => (int)$this->_handleQty($productId),
                 'sku'                 => $product->getSku(),
-                'images'              => $this->_handleImages($product),
+                'images'              => $this->_handleImages($productId),
                 'store_data'          => $this->_handleProductStoreData($product),
             ];
         }
@@ -260,90 +233,11 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     /**
      * @return $this
      */
-    private function _joinData()
+    private function _handleAttributes()
     {
-        $this->_productAttributeCollection = Mage::getResourceModel('eav/entity_attribute_collection');
-        $this->_productAttributeCollection
-            ->addFieldToFilter('attribute_code', [
-                'in' => array_values(array_merge(
-                    $this->_storeProductAttributeCodes,
-                    $this->_globalProductAttributeCodes
-                )),
-            ]);
-
-        $mainTableName = $this->_productCollection->getResource()->getEntityTable();
-
-        /** @var Mage_Eav_Model_Attribute $productAttribute */
-        foreach ($this->_productAttributeCollection as $productAttribute) {
-            if ($productAttribute->getBackendTable() === $mainTableName) {
-                $this->_productCollection->addAttributeToSelect($productAttribute->getAttributeCode());
-            } elseif (in_array($productAttribute->getAttributeCode(), $this->_globalProductAttributeCodes)) {
-                $valueAlias = $this->_getAttributeValueAlias($productAttribute->getAttributeCode());
-
-                $this->_joinAttribute(
-                    $valueAlias,
-                    'catalog_product/' . $productAttribute->getAttributeCode(),
-                    $this->_linkField,
-                    null,
-                    'left'
-                );
-            } else {
-                foreach (array_keys($this->_storeIds) as $storeId) {
-                    $valueAlias = $this->_getAttributeValueAlias($productAttribute->getAttributeCode(), $storeId);
-
-                    $this->_joinAttribute(
-                        $valueAlias,
-                        'catalog_product/' . $productAttribute->getAttributeCode(),
-                        $this->_linkField,
-                        null,
-                        'left',
-                        $storeId
-                    );
-                }
-            }
-        }
+        $this->_attributeData = $this->_productResource->getAttributeData($this->_minId, $this->_maxId, array_keys($this->_storeIds));
 
         return $this;
-    }
-
-    /**
-     * @param string                                          $alias
-     * @param string|Mage_Eav_Model_Entity_Attribute_Abstract $attribute
-     * @param string                                          $bind
-     * @param string                                          $filter
-     * @param string                                          $joinType
-     * @param int|null                                        $storeId
-     *
-     * @return $this
-     */
-    private function _joinAttribute($alias, $attribute, $bind, $filter = null, $joinType = 'inner', $storeId = null)
-    {
-        if (in_array($alias, $this->_joinedAlias)) {
-            return $this;
-        }
-
-        $this->_joinedAlias[$alias] = $alias;
-        try {
-            $this->_productCollection->joinAttribute($alias, $attribute, $bind, $filter, $joinType, $storeId);
-        } catch (Exception $e) {
-            Mage::logException($e);
-        }
-        return $this;
-    }
-
-    /**
-     * @param string   $attributeCode
-     * @param int|null $storeId
-     *
-     * @return string
-     */
-    private function _getAttributeValueAlias($attributeCode, $storeId = null)
-    {
-        $returnValue = $attributeCode;
-        if ($storeId !== null) {
-            $returnValue .= '_' . $storeId;
-        }
-        return $returnValue;
     }
 
     /**
@@ -370,28 +264,25 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     }
 
     /**
-     * @param Mage_Catalog_Model_Product $product
+     * @param int $productId
      *
      * @return array
      * @throws Mage_Core_Exception
      */
-    private function _handleImages($product)
+    private function _handleImages($productId)
     {
         $mediaUrl = Mage::app()->getDefaultStoreView()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
         $imagePreUrl = $mediaUrl . 'catalog/product';
 
-        /** @noinspection PhpUndefinedMethodInspection */
-        $image = $product->getImage();
+        $image = $this->_getStoreData($productId, 0, 'image');
         if ($image) {
             $image = $imagePreUrl . $image;
         }
-        /** @noinspection PhpUndefinedMethodInspection */
-        $smallImage = $product->getSmallImage();
+        $smallImage = $this->_getStoreData($productId, 0, 'small_image');
         if ($smallImage) {
             $smallImage = $imagePreUrl . $smallImage;
         }
-        /** @noinspection PhpUndefinedMethodInspection */
-        $thumbnail = $product->getThumbnail();
+        $thumbnail = $this->_getStoreData($productId, 0, 'thumbnail');
         if ($thumbnail) {
             $thumbnail = $imagePreUrl . $thumbnail;
         }
@@ -404,56 +295,56 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     }
 
     /**
-     * @param Mage_Catalog_Model_Product $product
+     * @param int $productId
      *
      * @return array
      */
-    private function _handleCategories($product)
+    private function _handleCategories($productId)
     {
-        if (array_key_exists($product->getId(), $this->_categoryIds)) {
-            return $this->_categoryIds[$product->getId()];
+        if (array_key_exists($productId, $this->_categoryIds)) {
+            return $this->_categoryIds[$productId];
         }
 
         return [];
     }
 
     /**
-     * @param Mage_Catalog_Model_Product $product
+     * @param int $productId
      *
      * @return array
      */
-    private function _handleChildrenEntityIds($product)
+    private function _handleChildrenEntityIds($productId)
     {
-        if (array_key_exists($product->getId(), $this->_childrenProductIds)) {
-            return $this->_childrenProductIds[$product->getId()];
+        if (array_key_exists($productId, $this->_childrenProductIds)) {
+            return $this->_childrenProductIds[$productId];
         }
 
         return [];
     }
 
     /**
-     * @param Mage_Catalog_Model_Product $product
+     * @param int $productId
      *
      * @return int
      */
-    private function _handleStock($product)
+    private function _handleStock($productId)
     {
-        if (array_key_exists($product->getId(), $this->_stockData)) {
-            return $this->_stockData[$product->getId()]['is_in_stock'];
+        if (array_key_exists($productId, $this->_stockData)) {
+            return $this->_stockData[$productId]['is_in_stock'];
         }
 
         return 0;
     }
 
     /**
-     * @param Mage_Catalog_Model_Product $product
+     * @param int $productId
      *
      * @return int
      */
-    private function _handleQty($product)
+    private function _handleQty($productId)
     {
-        if (array_key_exists($product->getId(), $this->_stockData)) {
-            return $this->_stockData[$product->getId()]['qty'];
+        if (array_key_exists($productId, $this->_stockData)) {
+            return $this->_stockData[$productId]['qty'];
         }
 
         return 0;
@@ -470,14 +361,16 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
         $returnArray = [];
 
         foreach ($this->_storeIds as $storeId => $storeObject) {
+            $productId = (int)$product->getId();
+
             $returnArray[] = [
                 'store_id'      => $storeId,
-                'status'        => (int) $product->getData($this->_getAttributeValueAlias('status', $storeId)),
-                'description'   => $product->getData($this->_getAttributeValueAlias('description', $storeId)),
-                'link'          => $this->_handleLink($product, $storeObject),
-                'name'          => $product->getData($this->_getAttributeValueAlias('name', $storeId)),
-                'price'         => (float) $this->_handlePrice($product, $storeObject),
-                'display_price' => (float) $this->_handleDisplayPrice($product, $storeObject),
+                'status'        => $this->_getStoreData($productId, $storeId, 'status'),
+                'description'   => $this->_getStoreData($productId, $storeId, 'description'),
+                'link'          => $this->_handleLink($productId, $storeObject),
+                'name'          => $this->_getStoreData($productId, $storeId, 'name'),
+                'price'         => (float)$this->_handlePrice($productId, $storeId),
+                'display_price' => (float)$this->_handleDisplayPrice($product, $storeObject),
                 'currency_code' => $this->_getCurrencyCode($storeObject),
             ];
         }
@@ -485,17 +378,37 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
         return $returnArray;
     }
 
+    /**
+     * @param int    $productId
+     * @param int    $storeId
+     * @param string $attributeCode
+     *
+     * @return string|null
+     */
+    private function _getStoreData($productId, $storeId, $attributeCode)
+    {
+        if (
+            array_key_exists($productId, $this->_attributeData)
+            && array_key_exists($storeId, $this->_attributeData[$productId])
+            && array_key_exists($attributeCode, $this->_attributeData[$productId][$storeId])
+        ) {
+            return $this->_attributeData[$productId][$storeId][$attributeCode];
+        }
+
+        return null;
+    }
+
 
     /**
-     * @param Mage_Catalog_Model_Product $product
-     * @param Mage_Core_Model_Store      $store
+     * @param int                   $productId
+     * @param Mage_Core_Model_Store $store
      *
      * @return string
      * @throws Mage_Core_Exception
      */
-    private function _handleLink($product, $store)
+    private function _handleLink($productId, $store)
     {
-        $link = $product->getData($this->_getAttributeValueAlias('url_key', $store->getId()));
+        $link = $this->_getStoreData($productId, $store->getId(), 'url_key');
 
         if ($link) {
             return $store->getBaseUrl() . $link . $this->_getProductUrlSuffix($store->getId());
@@ -511,7 +424,7 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
      */
     private function _getCurrencyCode($store)
     {
-        if ($store->getId() === '0') {
+        if (0 === (int)$store->getId()) {
             return $store->getBaseCurrencyCode();
         }
         return $store->getCurrentCurrencyCode();
@@ -525,9 +438,9 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
      */
     private function _handleDisplayPrice($product, $store)
     {
-        $price = $product->getData($this->_getAttributeValueAlias('price', $store->getId()));
-        if (empty($price)) {
-            $price = $product->getData($this->_getAttributeValueAlias('price', 0));
+        $price = $this->_getStoreData($product->getId(), $store->getId(), 'price');
+        if (!$price) {
+            $price = $this->_getStoreData($product->getId(), 0, 'price');
         }
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -547,19 +460,19 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     }
 
     /**
-     * @param Mage_Catalog_Model_Product $product
-     * @param Mage_Core_Model_Store      $store
+     * @param int $productId
+     * @param int $storeId
      *
      * @return int | float
      */
-    private function _handlePrice($product, $store)
+    private function _handlePrice($productId, $storeId)
     {
-        $price = $product->getData($this->_getAttributeValueAlias('price', $store->getId()));
-        $specialPrice = $product->getData($this->_getAttributeValueAlias('special_price', $store->getId()));
+        $price = $this->_getStoreData($productId, $storeId, 'price');
+        $specialPrice = $this->_getStoreData($productId, $storeId, 'special_price');
 
-        if (!empty($specialPrice)) {
-            $specialFromDate = $product->getData($this->_getAttributeValueAlias('special_from_date', $store->getId()));
-            $specialToDate = $product->getData($this->_getAttributeValueAlias('special_to_date', $store->getId()));
+        if ($specialPrice) {
+            $specialFromDate = $this->_getStoreData($productId, $storeId, 'special_from_date');
+            $specialToDate = $this->_getStoreData($productId, $storeId, 'special_to_date');
 
             if ($specialFromDate) {
                 $specialFromDate = strtotime($specialFromDate);
