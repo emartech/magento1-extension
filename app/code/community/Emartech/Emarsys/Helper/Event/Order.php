@@ -52,6 +52,8 @@ class Emartech_Emarsys_Helper_Event_Order extends Emartech_Emarsys_Helper_Event_
         $orderData['shipments'] = $order->getShipmentsCollection()->toArray();
         $orderData['tracks'] = $order->getTracksCollection()->toArray();
 
+        $this->_handleCustomerData($order, $orderData);
+
         $this->_saveEvent(
             $websiteId,
             $storeId,

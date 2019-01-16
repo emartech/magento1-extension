@@ -89,4 +89,32 @@ class Emartech_Emarsys_Helper_Event_Base extends Mage_Core_Helper_Abstract
     {
         return $this->getConfigHelper()->isEnabledForStore($eventType, $storeId);
     }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param array $data
+     *
+     * @return void
+     */
+    protected function _handleCustomerData($order, &$data)
+    {
+        if ($order->getCustomerId()) {
+            $data['customer'] = $this->_getCustomerData($order->getCustomerId());
+        } else {
+            $data['customerName'] = $order->getCustomerName();
+            $data['customerEmail'] = $order->getCustomerEmail();
+        }
+    }
+
+    /**
+     * @param int $customerId
+     *
+     * @return array
+     */
+    protected function _getCustomerData($customerId)
+    {
+        $customer = Mage::getModel('customer/customer')->load($customerId);
+
+        return $customer->toArray();
+    }
 }

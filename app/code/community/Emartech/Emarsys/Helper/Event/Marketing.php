@@ -85,6 +85,8 @@ class Emartech_Emarsys_Helper_Event_Marketing extends Emartech_Emarsys_Helper_Ev
         $orderData['shipments'] = $order->getShipmentsCollection()->toArray();
         $orderData['tracks'] = $order->getTracksCollection()->toArray();
 
+        $this->_handleCustomerData($order, $orderData);
+
         $this->_saveEvent(
             $websiteId,
             $storeId,
@@ -202,6 +204,8 @@ class Emartech_Emarsys_Helper_Event_Marketing extends Emartech_Emarsys_Helper_Ev
         }
 
         $data['addresses']['billing'] = $object->getBillingAddress()->toArray();
+
+        $this->_handleCustomerData($object->getOrder(), $data);
 
         $this->_saveEvent(
             $websiteId,
