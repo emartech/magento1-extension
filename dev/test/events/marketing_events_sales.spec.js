@@ -191,27 +191,6 @@ describe.skip('Marketing events: sales', function() {
     await this.db.truncate('emarsys_events_data');
   });
 
-  describe('If config collectMarketingEvents is disabled', function() {
-    before(async function() {
-      await this.magentoApi.setConfig({
-        websiteId: 1,
-        config: {
-          collectCustomerEvents: 'disabled',
-          collectSalesEvents: 'disabled',
-          collectMarketingEvents: 'disabled'
-        }
-      });
-    });
-
-    it('should not create event', async function() {
-      await createNewCustomerOrder(this.magentoApi, this.customer);
-
-      const createdEvent = await getLastEvent(this.db);
-
-      expect(createdEvent).to.be.undefined;
-    });
-  });
-
   describe('If config collectMarketingEvents is enabled', function() {
     before(async function() {
       await this.magentoApi.setConfig({
@@ -221,55 +200,6 @@ describe.skip('Marketing events: sales', function() {
     });
 
     describe('when customer', function() {
-      let orderId;
-      before(async function() {
-        const order = await createNewCustomerOrder(this.magentoApi, this.customer);
-        orderId = order.orderId;
-      });
-
-      describe('submits order', function() {
-        it('should create sales_email_order_template event', async function() {
-          const event = await getLastEvent(this.db);
-          const createdEventData = JSON.parse(event.event_data);
-
-          expect(event.event_type).to.equal('sales_email_order_template');
-          expectCustomerAndOrderMatches(createdEventData, this.customer);
-          expect(createdEventData.order.addresses).to.have.property('billing');
-          expect(event.entity_id).to.equal(parseInt(orderId));
-          expect(event.website_id).to.equal(1);
-          expect(event.store_id).to.equal(1);
-        });
-      });
-
-      describe('order is invoiced', function() {
-        it('should create sales_email_invoice_template event', async function() {
-          await invoiceOrder(this.magentoApi, orderId);
-
-          const event = await getLastEvent(this.db);
-          const createdEventData = JSON.parse(event.event_data);
-          expect(event.event_type).to.equal('sales_email_invoice_template');
-          expectCustomerAndOrderMatches(createdEventData, this.customer);
-          expect(createdEventData.invoice.order_id).to.equal(orderId);
-          expect(event.website_id).to.equal(1);
-          expect(event.store_id).to.equal(1);
-        });
-      });
-
-      describe('order is shipped', function() {
-        it('should create sales_email_shipment_template event', async function() {
-          await shipOrder(this.magentoApi, orderId);
-
-          const event = await getLastEvent(this.db);
-          const createdEventData = JSON.parse(event.event_data);
-
-          expect(event.event_type).to.equal('sales_email_shipment_template');
-          expectCustomerAndOrderMatches(createdEventData, this.customer);
-          expect(createdEventData.order.shipments[0].order_id).to.equal(orderId);
-          expect(event.website_id).to.equal(1);
-          expect(event.store_id).to.equal(1);
-        });
-      });
-
       describe('order is', function() {
         let orderId;
 
@@ -305,25 +235,6 @@ describe.skip('Marketing events: sales', function() {
             expect(event.website_id).to.equal(1);
             expect(event.store_id).to.equal(1);
           });
-        });
-      });
-
-      describe('store is not enabled', function() {
-        before(async function() {
-          await this.clearStoreSettings(1);
-          await this.db.truncate('emarsys_events_data');
-        });
-
-        after(async function() {
-          await this.setDefaultStoreSettings(1);
-        });
-
-        it('should not create event', async function() {
-          await createNewCustomerOrder(this.magentoApi, this.customer);
-
-          const createdEvent = await getLastEvent(this.db);
-
-          expect(createdEvent).to.be.undefined;
         });
       });
     });

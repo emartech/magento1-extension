@@ -96,7 +96,7 @@ const setDefaultStoreSettings = magentoApi => async websiteId => {
   });
 };
 
-const clearStoreSettings = magentoApi => async (websiteId) => {
+const clearStoreSettings = magentoApi => async websiteId => {
   return await magentoApi.execute('config', 'set', {
     websiteId,
     config: {

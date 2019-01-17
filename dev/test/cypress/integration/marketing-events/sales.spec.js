@@ -24,7 +24,7 @@ describe('Marketing Events - Sales', function() {
     cy.get('#checkout-step-payment .buttons-set .button').click();
 
     cy.get('#checkout-review-submit .buttons-set .button').click();
-    cy.wait(100);
+    cy.wait(1000);
   };
 
   const fulfillLatestOrder = () => {
@@ -73,6 +73,46 @@ describe('Marketing Events - Sales', function() {
       cy.task('setConfig', { websiteId: 1, config: { collectMarketingEvents: 'disabled' } });
     });
 
+    context('store is not enabled', function() {
+      before(() => {
+        cy.task('setConfig', {
+          websiteId: 1,
+          config: {
+            storeSettings: []
+          }
+        });
+      });
+
+      after(() => {
+        cy.task('setConfig', {
+          websiteId: 1,
+          config: {
+            storeSettings: [
+              {
+                storeId: 0,
+                slug: 'cypress-testadminslug'
+              },
+              {
+                storeId: 1,
+                slug: 'cypress-testslug'
+              }
+            ]
+          }
+        });
+      });
+
+      it('should not create event', function() {
+        const email = `cypress-marketing-on-nostore-sales${getUid()}@events.com`;
+        const password = 'SalesEvents123';
+
+        cy.registerCustomer({ email, password });
+        createTestOrder({ email, password });
+        fulfillLatestOrder();
+
+        cy.shouldNotExistsEvents(['customer_new_account_registered']);
+      });
+    });
+
     it('should create sales events', function() {
       const email = `cypress-marketing-on-sales${getUid()}@events.com`;
       const password = 'SalesEvents123';
@@ -81,10 +121,10 @@ describe('Marketing Events - Sales', function() {
       createTestOrder({ email, password });
       fulfillLatestOrder();
 
-      cy.shouldCreateEvent('sales_email_order_template', { customer_email: email });
-      cy.shouldCreateEvent('sales_email_invoice_template', { addresses: { shipping: { email } } });
-      cy.shouldCreateEvent('sales_email_shipment_template', { addresses: { shipping: { email } } });
-      cy.shouldCreateEvent('sales_email_creditmemo_template', { addresses: { shipping: { email } } });
+      cy.shouldCreateEvent('sales_email_order_template', { customer: { email } });
+      cy.shouldCreateEvent('sales_email_invoice_template', { customer: { email } });
+      cy.shouldCreateEvent('sales_email_shipment_template', { customer: { email } });
+      cy.shouldCreateEvent('sales_email_creditmemo_template', { customer: { email } });
     });
   });
 });

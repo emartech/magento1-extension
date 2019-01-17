@@ -10,9 +10,10 @@ Cypress.Commands.add('shouldCreateEvent', (type, expectedDataSubset) => {
   });
 });
 
-Cypress.Commands.add('shouldNotExistsEvents', () => {
+Cypress.Commands.add('shouldNotExistsEvents', (filterEventTypes = []) => {
   cy.task('getAllEvents').then((events) => {
-    expect(events.length).to.be.empty;
+    const filteredEvents = events.filter(event => !filterEventTypes.includes(event.event_type));
+    expect(filteredEvents.length).to.be.empty;
   });
 });
 

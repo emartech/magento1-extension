@@ -56,9 +56,7 @@ const clearEvents = async () => {
   return await db.truncate('emarsys_events_data');
 };
 
-module.exports = (on, config) => { // eslint-disable-line no-unused-vars
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
+module.exports = (on) => {
 
   on('task', {
     clearDb: async () => {
