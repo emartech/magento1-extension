@@ -365,7 +365,7 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
 
             $returnArray[] = [
                 'store_id'      => $storeId,
-                'status'        => $this->_getStoreData($productId, $storeId, 'status'),
+                'status'        => (int) $this->_getStoreData($productId, $storeId, 'status'),
                 'description'   => $this->_getStoreData($productId, $storeId, 'description'),
                 'link'          => $this->_handleLink($productId, $storeObject),
                 'name'          => $this->_getStoreData($productId, $storeId, 'name'),
