@@ -101,6 +101,7 @@ class Emartech_Emarsys_Helper_Event_Base extends Mage_Core_Helper_Abstract
         if ($order->getCustomerId()) {
             $data['customer'] = $this->_getCustomerData($order->getCustomerId());
         } else {
+            $data['is_guest'] = '1';
             $data['customerName'] = $order->getCustomerName();
             $data['customerEmail'] = $order->getCustomerEmail();
         }
