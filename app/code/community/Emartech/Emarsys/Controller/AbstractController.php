@@ -81,12 +81,16 @@ abstract class Emartech_Emarsys_Controller_AbstractController extends Mage_Core_
             $this->_badRequestException();
 
         } catch (Mage_Core_Exception $e) {
+            $statusCode = Mage_Api2_Model_Server::HTTP_BAD_REQUEST;
+            if ($e instanceof Emartech_Emarsys_Exception_NotAcceptableException) {
+                $statusCode =  Mage_Api2_Model_Server::HTTP_NOT_ACCEPTABLE;
+            }
             $this->_sendData(
                 [
                     'status'  => 'error',
                     'message' => $e->getMessage(),
                 ],
-                Mage_Api2_Model_Server::HTTP_BAD_REQUEST
+                $statusCode
             );
         } catch (Exception $e) {
             Mage::logException($e);

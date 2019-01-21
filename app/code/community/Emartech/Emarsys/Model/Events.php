@@ -29,11 +29,14 @@ class Emartech_Emarsys_Model_Events extends Emartech_Emarsys_Model_Abstract_Base
      * @param Emartech_Emarsys_Controller_Request_Http $request
      *
      * @return array
+     * @throws Emartech_Emarsys_Exception_NotAcceptableException
      */
     public function handlePost($request)
     {
         $sinceId = $request->getParam('since_id', 0);
         $pageSize = $request->getParam('page_size', 1000);
+
+        $this->_validateSinceId($sinceId);
 
         try {
             $this
@@ -143,5 +146,47 @@ class Emartech_Emarsys_Model_Events extends Emartech_Emarsys_Model_Abstract_Base
         $oldEvents->walk('delete');
 
         return $this;
+    }
+
+    /**
+     * @param $sinceId
+     * @throws Emartech_Emarsys_Exception_NotAcceptableException
+     */
+    private function _validateSinceId($sinceId)
+    {
+        if ($this->_isSinceIdHigherThanAutoIncrement($sinceId)) {
+            throw new Emartech_Emarsys_Exception_NotAcceptableException('sinceId is higher than events auto-increment');
+        }
+    }
+
+    /**
+     * @param $sinceId
+     * @return bool
+     */
+    private function _isSinceIdHigherThanAutoIncrement($sinceId)
+    {
+        $resource = Mage::getSingleton('core/resource');
+        $readConnection = $resource->getConnection('core_read');
+
+        $query = "
+            SELECT
+                (
+                    SELECT
+                        `AUTO_INCREMENT`
+                    FROM
+                        INFORMATION_SCHEMA.TABLES
+                    WHERE
+                        TABLE_SCHEMA = (
+                            SELECT
+                                database()
+                        )
+                        AND TABLE_NAME = 'emarsys_events_data'
+                ) <= (
+                    SELECT
+                        CAST(? AS UNSIGNED)
+                );
+        ";
+
+        return (bool) $readConnection->fetchOne($query, [$sinceId]);
     }
 }
