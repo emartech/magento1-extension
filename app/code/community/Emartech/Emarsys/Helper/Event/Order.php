@@ -9,8 +9,6 @@
  */
 class Emartech_Emarsys_Helper_Event_Order extends Emartech_Emarsys_Helper_Event_Base
 {
-    const DEFAULT_TYPE = 'subscription/unknown';
-
     /**
      * @param Mage_Sales_Model_Order $order
      *
