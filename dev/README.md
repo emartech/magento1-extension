@@ -135,33 +135,12 @@ $ make test
 ---
 ## Release
 
-Merge `master` to `production` branch, use message like `Prepare release 1.1.1`. Do not merge deleted files (`dev/*`, `codeship*`, etc).
-
-Update the version in `composer.json` on **production branch**
-```json
-{
-  "name": "emartech/emarsys-magento2-extension",
-  "description": "Emarsys Marketing Platform",
-  "license": "MIT",
-  "require": {
-    "magento/framework": "*"
-  },
-  "type": "magento2-module",
-  "version": "1.1.1",
-  "autoload": {
-     "files": [ "registration.php" ],
-     "psr-4": {
-        "Emartech\\Emarsys\\": ""
-     }
-  }
-}
-```
-
-Commit with message that will be the release title. Use `--skip-ci` in description.
-
-Tag with the same version as in `composer.json`.
-
-Push `production` branch with tags.
+* Update the version in `app/etc/modules/Emartech_Emarsys.xml`.
+* Update the version in `magazine.json`.
+* Create the extension package by `make package`.
+* Commit, tag and push with tags.
+* On **GitHub -> Releases** choose **Draft new release**
+* Create the release and upload the package tar file by attaching it to the release.
 
 ## Codeship env
 * [Install](https://documentation.codeship.com/pro/jet-cli/installation/) `jet`

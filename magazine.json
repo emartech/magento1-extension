@@ -1,0 +1,66 @@
+{
+  "name": "Emarsys",
+  "version": {
+    "release": "1.0.0"
+  },
+  "stability": {
+    "release": "stable"
+  },
+  "license": {
+    "_content": "MIT",
+    "attribs": {
+      "uri": "https://github.com/emartech/magento1-extension/blob/master/LICENSE"
+    }
+  },
+  "channel": "community",
+  "summary": "Emarsys Magento 1 Extension",
+  "description": "Connector for Emarsys Marketing Platform",
+  "developer": {
+    "name": "Emarsys",
+    "user": "team-plugins",
+    "email": "team-shopify@emarsys.net"
+  },
+  "date": "2019-01-24",
+  "dependencies": {
+    "required": {
+      "php": {
+        "min": "5.6.0",
+        "max": "7.2.0"
+      }
+    }
+  },
+  "include": {
+    "magelocal": [] ,
+    "magecommunity": [
+      "app/code/community/Emartech/Emarsys/*"
+    ],
+    "magecore": [],
+    "magedesign": [
+      "app/design/*"
+    ],
+    "mageetc": [
+      "app/etc/*"
+    ],
+    "magelib": [],
+    "magelocale": [],
+    "magemedia": [],
+    "mageskin": [
+      "skin/*"
+    ],
+    "mageweb": [],
+    "magetest": [],
+    "mage": []
+  },
+  "exclude": [
+    "vendor",
+    "*.json",
+    ".yaml",
+    "codeship*",
+    "dev",
+    "Makefile",
+    "tasks",
+    "tmp",
+    "*.lock",
+    "*.tar"
+  ]
+}

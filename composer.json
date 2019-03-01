@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "mridang/magazine": "^0.2.0"
+    }
+}
