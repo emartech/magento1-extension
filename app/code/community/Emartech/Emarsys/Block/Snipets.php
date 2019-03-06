@@ -308,6 +308,7 @@ class Emartech_Emarsys_Block_Snipets extends Mage_Core_Block_Template
             $returnArray = [
                 'orderId' => $order->getId(),
                 'items'   => $this->_getOrderItems($order),
+                'email'   => $order->getCustomerEmail()
             ];
         }
 

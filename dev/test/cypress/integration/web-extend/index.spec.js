@@ -148,6 +148,7 @@ const buyItem = () => {
       price: 59,
       quantity: 1
     }]);
+    expect(orderData.email).to.be.equal('guest@cypress.net');
   });
 };
 
