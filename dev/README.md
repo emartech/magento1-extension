@@ -135,7 +135,7 @@ $ make test
 ---
 ## Release
 
-* Update the version in `app/etc/modules/Emartech_Emarsys.xml`.
+* Update the version in `app/code/community/Emartech/Emarsys/etc/config.xml`.
 * Update the version in `magazine.json`.
 * Create the extension package by `make package`.
 * Commit, tag and push with tags.
