@@ -15,7 +15,11 @@ class Emartech_Emarsys_Block_Connecttoken_Renderer extends Mage_Adminhtml_Block_
      * @return string
      */
     protected function _getElementHtml($element) {
-        $element->setDisabled('disabled');
+        $connectorHelper = Mage::helper('emartech_emarsys/connector');
+        $element
+            ->setData('value', $connectorHelper->getConnectorTokenValue($element->getData('value')))
+            ->setDisabled('disabled');
+
         return parent::_getElementHtml($element);
     }
 }

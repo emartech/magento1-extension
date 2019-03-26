@@ -11,7 +11,7 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
 {
     CONST XML_PATH_CONNECTOR_TOKEN = 'emartech_emarsys/general/connecttoken';
     const VALID_AUTHORIZATION_TYPE = 'Bearer';
-    const MAGENTO_VERSION = 1;
+    const MAGENTO_VERSION          = 1;
 
     /**
      * @return string
@@ -55,22 +55,11 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
      */
     public function getToken()
     {
-        $returnArray = [
-            'hostname'        => '',
-            'token'           => '',
-            'magento_version' => '',
+        return [
+            'hostname'        => $this->_getBaseUrl(),
+            'token'           => Mage::getStoreConfig(self::XML_PATH_CONNECTOR_TOKEN),
+            'magento_version' => self::MAGENTO_VERSION,
         ];
-
-        $token = Mage::getStoreConfig(self::XML_PATH_CONNECTOR_TOKEN);
-
-        try {
-            $token = base64_decode($token);
-            $returnArray = json_decode($token, true);
-        } catch (Exception $e) {
-            Mage::logException($e);
-        }
-
-        return $returnArray;
     }
 
     /**
@@ -92,14 +81,19 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
      */
     private function _getBaseUrl()
     {
-        $returnValue = '';
-        $uri = Zend_Uri::factory(Mage::getBaseUrl());
-
-        $returnValue = $uri->getHost();
-
-        $port = $uri->getPort();
-        if ($port && $port !== 80) {
-            $returnValue .= ':' . $port;
+        try {
+            $returnValue = Mage::app()
+                ->getWebsite(true)
+                ->getDefaultGroup()
+                ->getDefaultStore()
+                ->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+        } catch (Exception $e) {
+            try {
+                $uri = Zend_Uri::factory(Mage::getBaseUrl());
+                $returnValue = $uri->getUri();
+            } catch (Exception $e) {
+                $returnValue = '';
+            }
         }
 
         return $returnValue;
@@ -113,5 +107,33 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
         /** @var $oauthHelper Mage_Oauth_Helper_Data */
         $oauthHelper = Mage::helper('oauth');
         return $oauthHelper->generateToken();
+    }
+
+    /**
+     * @return string
+     */
+    public function refreshToken()
+    {
+        if ($token = $this->getApiToken()) {
+            return $token;
+        }
+
+        return $this->_generateApiToken();
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return string
+     */
+    public function getConnectorTokenValue($token)
+    {
+        $hostname = $this->_getBaseUrl();
+        $magento_version = self::MAGENTO_VERSION;
+
+        $connectJson = json_encode(compact('hostname', 'token', 'magento_version'));
+        $connectToken = base64_encode($connectJson);
+
+        return $connectToken;
     }
 }
