@@ -57,9 +57,37 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
     {
         return [
             'hostname'        => $this->_getBaseUrl(),
-            'token'           => Mage::getStoreConfig(self::XML_PATH_CONNECTOR_TOKEN),
+            'token'           => $this->_getTokenFromConfig(),
             'magento_version' => self::MAGENTO_VERSION,
         ];
+    }
+
+    /**
+     * @return string
+     */
+    private function _getTokenFromConfig()
+    {
+        return (string)Mage::getStoreConfig(self::XML_PATH_CONNECTOR_TOKEN);
+    }
+
+    /**
+     * @return string
+     */
+    private function _getOldToken()
+    {
+        try {
+            $token = json_decode(base64_decode($this->_getTokenFromConfig()), true);
+        } catch (\Exception $e) {
+            $token = [];
+        }
+
+        if (array_key_exists('token', $token)) {
+            $token = $token['token'];
+        } else {
+            $token = $this->_getTokenFromConfig();
+        }
+
+        return $token;
     }
 
     /**
@@ -87,6 +115,8 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
                 ->getDefaultGroup()
                 ->getDefaultStore()
                 ->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+
+            $returnValue = preg_replace('/^https?:\/\//', '', $returnValue);
         } catch (Exception $e) {
             try {
                 $uri = Zend_Uri::factory(Mage::getBaseUrl());
@@ -114,11 +144,7 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
      */
     public function refreshToken()
     {
-        if ($token = $this->getApiToken()) {
-            return $token;
-        }
-
-        return $this->_generateApiToken();
+        return $this->_getOldToken();
     }
 
     /**
@@ -131,7 +157,7 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
         $hostname = $this->_getBaseUrl();
         $magento_version = self::MAGENTO_VERSION;
 
-        $connectJson = json_encode(compact('hostname', 'token', 'magento_version'));
+        $connectJson = json_encode(compact('hostname', 'token', 'magento_version'), JSON_UNESCAPED_SLASHES);
         $connectToken = base64_encode($connectJson);
 
         return $connectToken;

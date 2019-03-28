@@ -17,3 +17,5 @@ $installer = $this;
 $connectorHelper = Mage::helper('emartech_emarsys/connector');
 
 $installer->setConfigData($connectorHelper::XML_PATH_CONNECTOR_TOKEN, $connectorHelper->refreshToken());
+
+Mage::app()->getCacheInstance()->cleanType('config');
