@@ -87,6 +87,10 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
             $token = $this->_getTokenFromConfig();
         }
 
+        if (!$token) {
+            $token = $this->_generateApiToken();
+        }
+
         return $token;
     }
 
