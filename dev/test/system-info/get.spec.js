@@ -6,7 +6,7 @@ describe('SystemInfo endpoint', function() {
       magento_version: '1.9.3.10',
       magento_edition: 'Community',
       php_version: '7.2.10',
-      module_version: '1.1.0'
+      module_version: '1.1.1'
     };
 
     const info = await this.magentoApi.execute('systeminfo', 'get');

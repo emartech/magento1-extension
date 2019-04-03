@@ -124,11 +124,10 @@ before(async function() {
     .from('core_config_data')
     .where({ path: 'emartech_emarsys/general/connecttoken' })
     .first();
-  const { hostname, token } = JSON.parse(Buffer.from(result.value, 'base64'));
-  this.hostname = hostname;
-  this.token = token;
-  console.log('host', hostname);
-  console.log('Token: ' + token);
+  this.hostname = process.env.MAGENTO_URL;
+  this.token = result.value;
+  console.log('host', this.hostname);
+  console.log('Token: ' + this.token);
 
   this.xmlRpcApi = await MagentoXmlRpcApiClient.create();
 
