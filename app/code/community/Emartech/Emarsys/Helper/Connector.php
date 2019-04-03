@@ -76,13 +76,13 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
     private function _getOldToken()
     {
         try {
-            $token = json_decode(base64_decode($this->_getTokenFromConfig()), true);
+            $connectToken = json_decode(base64_decode($this->_getTokenFromConfig()), true);
         } catch (\Exception $e) {
-            $token = [];
+            $connectToken = [];
         }
 
-        if (array_key_exists('token', $token)) {
-            $token = $token['token'];
+        if (array_key_exists('token', $connectToken)) {
+            $token = $connectToken['token'];
         } else {
             $token = $this->_getTokenFromConfig();
         }
@@ -114,23 +114,32 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
     private function _getBaseUrl()
     {
         try {
-            $returnValue = Mage::app()
+            $baseUrl = Mage::app()
                 ->getWebsite(true)
                 ->getDefaultGroup()
                 ->getDefaultStore()
                 ->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
-
-            $returnValue = preg_replace('/^https?:\/\//', '', $returnValue);
         } catch (Exception $e) {
             try {
-                $uri = Zend_Uri::factory(Mage::getBaseUrl());
-                $returnValue = $uri->getUri();
+                $baseUrl = Mage::getBaseUrl();
             } catch (Exception $e) {
-                $returnValue = '';
+                return '';
             }
         }
 
-        return $returnValue;
+        $uri = Zend_Uri::factory($baseUrl);
+
+        $hostname = $uri->getHost();
+        $port = $uri->getPort();
+        $path = $uri->getPath();
+        if ($port && $port !== 80) {
+            $hostname .= ':' . $port;
+        }
+        if ($path && $path !== '/') {
+            $hostname .= $path;
+        }
+
+        return $hostname;
     }
 
     /**
