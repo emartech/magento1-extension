@@ -35,7 +35,7 @@ const getMagentoToken = async () => {
       .where({ path: 'emartech_emarsys/general/connecttoken' })
       .first();
 
-    const { token } = JSON.parse(Buffer.from(result.value, 'base64'));
+    const token = result.value;
     magentoToken = token;
     console.log('MAGENTO-TOKEN', magentoToken);
   }
