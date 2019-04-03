@@ -1,7 +1,7 @@
 {
   "name": "Emarsys",
   "version": {
-    "release": "1.1.0"
+    "release": "1.1.1"
   },
   "stability": {
     "release": "stable"
@@ -20,7 +20,7 @@
     "user": "team-plugins",
     "email": "team-shopify@emarsys.net"
   },
-  "date": "2019-01-24",
+  "date": "2019-04-03",
   "dependencies": {
     "required": {
       "php": {
