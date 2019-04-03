@@ -17,10 +17,6 @@ magento1-test.local:
   cached: true
   encrypted_env_file: codeship.env.encrypted
   dockercfg_service: dockercfg-generator
-dockercfg-generator:
-  image: codeship/gcr-dockercfg-generator
-  add_docker: true
-  encrypted_env_file: codeship.env.encrypted
 magento-static:
   image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
   container_name: magento-static
@@ -45,6 +41,8 @@ node:
     - db
     - magento1-test.local
   cached: true
+  environment:
+    MAGENTO_HOST: magento1-test.local
   encrypted_env_file: codeship.env.encrypted
 deployment:
   image: codeship/google-cloud-deployment

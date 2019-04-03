@@ -124,7 +124,7 @@ before(async function() {
     .from('core_config_data')
     .where({ path: 'emartech_emarsys/general/connecttoken' })
     .first();
-  this.hostname = process.env.MAGENTO_URL;
+  this.hostname = process.env.MAGENTO_HOST;
   this.token = result.value;
   console.log('host', this.hostname);
   console.log('Token: ' + this.token);
