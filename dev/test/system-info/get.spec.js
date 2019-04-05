@@ -5,12 +5,11 @@ describe('SystemInfo endpoint', function() {
     const expectedInfo = {
       magento_version: '1.9.3.10',
       magento_edition: 'Community',
-      php_version: '7.2.10',
-      module_version: '1.1.1'
+      php_version: '7.2.10'
     };
 
     const info = await this.magentoApi.execute('systeminfo', 'get');
 
-    expect(info).to.eql(expectedInfo);
+    expect(info).to.containSubset(expectedInfo);
   });
 });
