@@ -10,6 +10,16 @@ const createSubscriptionGetter = db => {
   };
 };
 
+const createSubscriptionSetter = db => {
+  return async (customerId, email, status) => {
+    return await db('newsletter_subscriber').insert({
+      subscriber_email: email,
+      subscriber_status: status,
+      customer_id: customerId
+    });
+  };
+};
+
 const isSubscribed = subscription => {
   return subscription !== undefined && subscription.subscriber_status === 1;
 };
@@ -23,9 +33,11 @@ const storeId = 1;
 
 describe('Subscriptions api', function() {
   let subscriptionFor;
+  let createSubscription;
 
   before(function() {
     subscriptionFor = createSubscriptionGetter(this.db);
+    createSubscription = createSubscriptionSetter(this.db);
   });
 
   describe('update', function() {
@@ -36,43 +48,36 @@ describe('Subscriptions api', function() {
     });
 
     describe('subscribe', function() {
-      it('should set subscription without customer', async function() {
-        expect(isSubscribed(await subscriptionFor(noCustomerEmail))).to.be.false;
+      it('should not set subscription if it did not exist before', async function() {
+        expect(await subscriptionFor(noCustomerEmail)).to.be.undefined;
 
         await this.magentoApi.execute('subscriptions', 'update', {
           subscriptions: [{ subscriber_email: noCustomerEmail, subscriber_status: true }]
         });
-
-        expect(isSubscribed(await subscriptionFor(noCustomerEmail))).to.be.true;
+        expect(await subscriptionFor(noCustomerEmail)).to.be.undefined;
       });
-
-      it('should set subscription with customer', async function() {
-        expect(isSubscribed(await subscriptionFor(customerEmail))).to.be.false;
+      it('should update subscription if it exist', async function() {
+        await createSubscription(customerId, customerEmail, 3);
 
         await this.magentoApi.execute('subscriptions', 'update', {
-          subscriptions: [{ subscriber_email: customerEmail, subscriber_status: true, customer_id: customerId }]
+          subscriptions: [{ subscriber_email: customerEmail, subscriber_status: true }]
         });
-
         expect(isSubscribed(await subscriptionFor(customerEmail))).to.be.true;
       });
     });
 
     describe('unsubscribe', function() {
-      it('should unsubscribe without customer', async function() {
-        await this.magentoApi.execute('subscriptions', 'update', {
-          subscriptions: [{ subscriber_email: noCustomerEmail, subscriber_status: true }]
-        });
+      it('should not create unsubscribed record if it did not exist', async function() {
+        expect(await subscriptionFor(noCustomerEmail)).to.be.undefined;
+
         await this.magentoApi.execute('subscriptions', 'update', {
           subscriptions: [{ subscriber_email: noCustomerEmail, subscriber_status: false }]
         });
 
-        expect(isSubscribed(await subscriptionFor(noCustomerEmail))).to.be.false;
+        expect(await subscriptionFor(noCustomerEmail)).to.be.undefined;
       });
-
-      it('should unsubscribe with customer', async function() {
-        await this.magentoApi.execute('subscriptions', 'update', {
-          subscriptions: [{ subscriber_email: customerEmail, subscriber_status: true, customer_id: customerId }]
-        });
+      it('should unsubscribe', async function() {
+        await createSubscription(customerId, customerEmail, 1);
         await this.magentoApi.execute('subscriptions', 'update', {
           subscriptions: [{ subscriber_email: customerEmail, subscriber_status: false, customer_id: customerId }]
         });

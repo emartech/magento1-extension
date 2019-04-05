@@ -115,27 +115,13 @@ class Emartech_Emarsys_Model_Subscriptions
 
         if (array_key_exists('subscriber_email', $subscription) && $subscription['subscriber_email']) {
             $subscriberEmail = $subscription['subscriber_email'];
-            $customerId = array_key_exists('customer_id', $subscription) ? $subscription['customer_id'] : 0;
-            $this
-                ->_filterEmail($subscriberEmail)
-                ->_filterCustomer($customerId);
-
-            if ($this->_getSharingConfig()->isWebsiteScope()) {
-                $websiteId = array_key_exists('website_id', $subscription) ? $subscription['website_id'] : 0;
-                $this
-                    ->_joinWebsite()
-                    ->_filterWebsite($websiteId);
-            }
+            $this->_filterEmail($subscriberEmail);
 
             /** @var Mage_Newsletter_Model_Subscriber $subscriber */
             $subscriber = $this->_collection->fetchItem();
 
             if (!($subscriber instanceof Mage_Newsletter_Model_Subscriber)) {
-                if ($type !== Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-                    return false;
-                }
-
-                $subscriber = Mage::getModel('newsletter/subscriber');
+                return false;
             }
 
             foreach ($subscription as $key => $value) {
