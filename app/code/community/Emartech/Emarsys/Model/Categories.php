@@ -94,10 +94,8 @@ class Emartech_Emarsys_Model_Categories extends Emartech_Emarsys_Model_Abstract_
      */
     private function _initCollection()
     {
-        $this->_collection = Mage::getModel('catalog/category')->getCollection();
-
-        $this->_linkField = $this->_collection->getEntity()->getEntityIdField();
-
+        $this->_collection = Mage::getResourceModel('catalog/category_collection');
+        $this->_linkField = $this->_collection->getResource()->getIdFieldName();
         return $this;
     }
 
@@ -107,9 +105,10 @@ class Emartech_Emarsys_Model_Categories extends Emartech_Emarsys_Model_Abstract_
      */
     private function _joinData()
     {
+        $entityTypeId = Mage::getSingleton('eav/config')->getEntityType(Mage_Catalog_Model_Category::ENTITY)->getId();
         /** @var Mage_Eav_Model_Resource_Entity_Attribute_Collection $attributeCollection */
         $attributeCollection = Mage::getModel('eav/entity_attribute')->getCollection();
-        $attributeCollection->setEntityTypeFilter($this->_collection->getEntity()->getTypeId());
+        $attributeCollection->setEntityTypeFilter($entityTypeId);
         $attributeCollection->addFieldToFilter('attribute_code', [
             'in' =>
                 array_values(array_merge(
@@ -118,9 +117,12 @@ class Emartech_Emarsys_Model_Categories extends Emartech_Emarsys_Model_Abstract_
                 )),
         ]);
 
-        $mainTableName = $this->_collection->getEntity()->getTable('catalog/category');
+        $mainTableName = $this->_collection->getTable('catalog/category');
+
+        $joinAttr = [];
 
         foreach ($attributeCollection as $attribute) {
+            $joinAttr[] = $attribute->getAttributeCode();
             if ($attribute->getBackendTable() === $mainTableName) {
                 $this->_collection->addAttributeToSelect($attribute->getAttributeCode());
             } elseif (in_array($attribute->getAttributeCode(), $this->_globalCategoryAttributeCodes)) {
@@ -136,7 +138,6 @@ class Emartech_Emarsys_Model_Categories extends Emartech_Emarsys_Model_Abstract_
             } else {
                 foreach (array_keys($this->_storeIds) as $storeId) {
                     $valueAlias = $this->_getAttributeValueAlias($attribute->getAttributeCode(), $storeId);
-
                     $this->_collection->joinAttribute(
                         $valueAlias,
                         'catalog_category/' . $attribute->getAttributeCode(),
