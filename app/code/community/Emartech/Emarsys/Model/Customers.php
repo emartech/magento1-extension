@@ -231,14 +231,18 @@ class Emartech_Emarsys_Model_Customers extends Emartech_Emarsys_Model_Abstract_B
     private function _joinSubscriptionStatus()
     {
         $tableAlias = 'newsletter';
+        $subSelect = $this->_collection->getConnection()
+            ->select()
+            ->from($this->_subscriptionTable, new Zend_Db_Expr('MAX(subscriber_id)'))
+            ->where('customer_id = '.$tableAlias.'.customer_id');
 
-        $this->_collection->joinTable(
-            [$tableAlias => $this->_subscriptionTable],
-            'customer_id = entity_id',
-            ['accepts_marketing' => 'subscriber_status'],
-            null,
-            'left'
-        );
+        $this->_collection
+            ->getSelect()
+            ->joinLeft(
+                [$tableAlias => $this->_subscriptionTable],
+                $tableAlias.'.customer_id = e.entity_id AND (' . $subSelect . ') = '.$tableAlias.'.subscriber_id',
+                ['accepts_marketing' => 'subscriber_status']
+            );
 
         return $this;
     }
