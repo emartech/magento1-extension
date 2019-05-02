@@ -34,7 +34,7 @@ The web container will expose its port `80` to port `8886` on the host machine.
 
 By default the Magento store will be available at http://magento1-dev.local:8886, but you have to add this to your `/etc/hosts` file first:
 ```
-127.0.0.1 magento1-dev.local
+127.0.0.1 magento1-dev.local magento1-test.local
 ```
 
 ### Create test DB
