@@ -33,7 +33,7 @@ node:
   container_name: mage_node
   build:
     context: ./dev
-    dockerfile: ./Docker/Dockerfile-node
+    dockerfile: ./Docker/Dockerfile-node-CI
     encrypted_args_file: codeship.env.encrypted
   volumes:
     - ./dev/test:/test
