@@ -19,7 +19,7 @@ describe('Marketing Events - Sales', function() {
   };
 
   const finishOrder = () => {
-    cy.get('#s_method_flatrate_flatrate').check();
+    cy.get('#s_method_flatrate_flatrate').check({ force: true });
     cy.get('#checkout-step-shipping_method .buttons-set .button').click();
 
     cy.get('#checkout-step-payment .buttons-set .button').click();
