@@ -97,7 +97,7 @@ Clean the generated code folder and run `cache:flush`:
 $ make flush
 ```
 
-For debugging, use (This will `tail -f` Magento's `expception.log` file.):
+For debugging, use (This will `tail -f` Magento's `exception.log` file.):
 ```
 $ make exception
 ```
