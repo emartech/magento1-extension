@@ -88,7 +88,7 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
      */
     public function handleGet($request)
     {
-        $page = (int)$request->getParam('page', 0);
+        $page = (int)$request->getParam('page', 1);
         $pageSize = (int)$request->getParam('page_size', 1000);
         $storeIds = $request->getParam('store_id', []);
 
@@ -395,6 +395,10 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
             return $this->_attributeData[$productId][$storeId][$attributeCode];
         }
 
+        if ($storeId != 0) {
+            return $this->_getStoreData($productId, 0, $attributeCode);
+        }
+
         return null;
     }
 
@@ -439,9 +443,6 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     private function _handleDisplayPrice($product, $store)
     {
         $price = $this->_getStoreData($product->getId(), $store->getId(), 'price');
-        if (!$price) {
-            $price = $this->_getStoreData($product->getId(), 0, 'price');
-        }
 
         /** @noinspection PhpUndefinedMethodInspection */
         $product->setPrice($price);

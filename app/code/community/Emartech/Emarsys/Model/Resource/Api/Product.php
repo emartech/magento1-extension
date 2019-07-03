@@ -96,15 +96,22 @@ class Emartech_Emarsys_Model_Resource_Api_Product extends Mage_Catalog_Model_Res
 
         $numberOfItems = $this->_getReadAdapter()->fetchOne($itemsCountQuery);
 
-        $subSelect = $this->_getReadAdapter()->select()
-            ->from($productsTable, ['eid' => $linkField])
-            ->order($linkField)
-            ->limit($pageSize, $page);
+        $minMaxValues = [
+            'minId' => 0,
+            'maxId' => 0,
+        ];
 
-        $idQuery = $this->_getReadAdapter()->select()
-            ->from(['tmp' => $subSelect], ['minId' => 'min(tmp.eid)', 'maxId' => 'max(tmp.eid)']);
+        if ($numberOfItems > 0) {
+            $subSelect = $this->_getReadAdapter()->select()
+                ->from($productsTable, ['eid' => $linkField])
+                ->order($linkField)
+                ->limit($pageSize, $page);
 
-        $minMaxValues = $this->_getReadAdapter()->fetchRow($idQuery);
+            $idQuery = $this->_getReadAdapter()->select()
+                ->from(['tmp' => $subSelect], ['minId' => 'min(tmp.eid)', 'maxId' => 'max(tmp.eid)']);
+
+            $minMaxValues = $this->_getReadAdapter()->fetchRow($idQuery);
+        }
 
         return [
             'numberOfItems' => (int)$numberOfItems,
@@ -254,7 +261,7 @@ class Emartech_Emarsys_Model_Resource_Api_Product extends Mage_Catalog_Model_Res
                 $mainTableFields[] = 'entity_id';
             }
             $attributesQuery = $this->_getReadAdapter()->select()
-                ->from($this->getTable($this->_mainTable), $mainTableFields)
+                ->from($this->_mainTable, $mainTableFields)
                 ->where('entity_id >= ?', $minProductId)
                 ->where('entity_id <= ?', $maxProductId);
 
@@ -288,7 +295,7 @@ class Emartech_Emarsys_Model_Resource_Api_Product extends Mage_Catalog_Model_Res
 
         foreach ($attributeTables as $attributeTable) {
             $attributeQueries[] = $this->_getReadAdapter()->select()
-                ->from($this->getTable($attributeTable), ['attribute_id', 'store_id', 'entity_id', 'value'])
+                ->from($attributeTable, ['attribute_id', 'store_id', 'entity_id', 'value'])
                 ->where('entity_id >= ?', $minProductId)
                 ->where('entity_id <= ?', $maxProductId)
                 ->where('store_id IN (?)', $storeIds)
