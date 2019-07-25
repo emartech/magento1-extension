@@ -35,7 +35,7 @@ describe('Webextend scripts', function() {
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          '<script>        window.Emarsys.Magento1.track({"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug"});    </script>'
+          '<script>        window.Emarsys.Magento1.track({"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug","cart":{"items":[]}});    </script>'
         )
       ).to.be.true;
     });
@@ -45,7 +45,7 @@ describe('Webextend scripts', function() {
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          '<script>        window.Emarsys.Magento1.track({"store":{"merchantId":"123"},"search":{"term":"yolo"},"exchangeRate":1,"slug":"testslug"});    </script>'
+          '<script>        window.Emarsys.Magento1.track({"store":{"merchantId":"123"},"search":{"term":"yolo"},"exchangeRate":1,"slug":"testslug","cart":{"items":[]}});    </script>'
         )
       ).to.be.true;
     });
@@ -55,7 +55,7 @@ describe('Webextend scripts', function() {
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          '<script src="http://yolo.hu/script"></script>    <script>        window.Emarsys.Magento1.track({"category":{"names":["Men","Shirts"],"ids":["5","15"]},"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug"});    </script>'
+          '<script src="http://yolo.hu/script"></script>    <script>        window.Emarsys.Magento1.track({"category":{"names":["Men","Shirts"],"ids":["5","15"]},"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug","cart":{"items":[]}});    </script>'
         )
       ).to.be.true;
     });
@@ -65,7 +65,7 @@ describe('Webextend scripts', function() {
       expect(
         emarsysSnippets.includes(
           //eslint-disable-next-line
-          '<script src="http://yolo.hu/script"></script>    <script>        window.Emarsys.Magento1.track({"product":{"sku":"acj004","id":"552"},"category":{"names":["Accessories","Jewelry"],"ids":["6","19"]},"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug"});    </script>'
+          '<script src="http://yolo.hu/script"></script>    <script>        window.Emarsys.Magento1.track({"product":{"sku":"acj004","id":"552"},"category":{"names":["Accessories","Jewelry"],"ids":["6","19"]},"store":{"merchantId":"123"},"exchangeRate":1,"slug":"testslug","cart":{"items":[]}});    </script>'
         )
       ).to.be.true;
     });

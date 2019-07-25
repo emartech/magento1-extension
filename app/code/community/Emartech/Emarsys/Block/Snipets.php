@@ -83,7 +83,7 @@ class Emartech_Emarsys_Block_Snipets extends Mage_Core_Block_Template
             $returnArray['slug'] = $slugData;
         }
 
-        if (($cartData = $this->_getCartData()) && $cartData['items']) {
+        if (($cartData = $this->_getCartData())) {
             $returnArray['cart'] = $cartData;
         }
 
