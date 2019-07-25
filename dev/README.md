@@ -1,4 +1,4 @@
-# Emarsys Magento 2 Extension Developer Guide
+# Emarsys Magento 1 Extension Developer Guide
 
 ## Prerequisites
 To be able to pull image from Google Container Registry (GCR), you will have to authenticate to Google Cloud and
