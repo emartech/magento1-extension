@@ -18,7 +18,7 @@ class Emartech_Emarsys_Model_Subscriptions
     private $_collection = null;
 
     /**
-     * @var null\Mage_Customer_Model_Config_Share
+     * @var null|Mage_Customer_Model_Config_Share
      */
     private $_sharingConfig = null;
 
@@ -26,10 +26,10 @@ class Emartech_Emarsys_Model_Subscriptions
      * @var array
      */
     private $numericFields = [
-      'website_id',
-      'store_id',
-      'customer_id',
-      'subscriber_id'
+        'website_id',
+        'store_id',
+        'customer_id',
+        'subscriber_id',
     ];
 
     /**
@@ -115,13 +115,35 @@ class Emartech_Emarsys_Model_Subscriptions
 
         if (array_key_exists('subscriber_email', $subscription) && $subscription['subscriber_email']) {
             $subscriberEmail = $subscription['subscriber_email'];
-            $this->_filterEmail($subscriberEmail);
+            $subscriberCustomerId = $subscription['customer_id'];
+            $subscriberWebsiteId = $subscription['website_id'];
+
+            $this
+                ->_filterEmail($subscriberEmail)
+                ->_filterCustomer($subscriberCustomerId);
+
+            if ($this->_getSharingConfig()->isWebsiteScope()) {
+                $this
+                    ->_joinWebsite()
+                    ->_filterWebsite($subscriberWebsiteId);
+            }
 
             /** @var Mage_Newsletter_Model_Subscriber $subscriber */
             $subscriber = $this->_collection->fetchItem();
 
-            if (!($subscriber instanceof Mage_Newsletter_Model_Subscriber)) {
-                return false;
+            if (!$subscriber) {
+                if ($type !== Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED || !$subscriberCustomerId) {
+                    return false;
+                }
+
+                if (false === ($customer = $this->_getCustomerData($subscriberCustomerId))
+                    || !in_array($subscriberWebsiteId, $customer->getSharedWebsiteIds())
+                ) {
+                    return false;
+                }
+
+                $subscriber = Mage::getModel('newsletter/subscriber');
+                $subscriber->setStoreId($customer->getStoreId());
             }
 
             foreach ($subscription as $key => $value) {
@@ -140,6 +162,17 @@ class Emartech_Emarsys_Model_Subscriptions
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param int $customerId
+     *
+     * @return Mage_Customer_Model_Customer|bool
+     */
+    private function _getCustomerData($customerId)
+    {
+        $customer = Mage::getModel('customer/customer')->load($customerId);
+        return $customer->getId() ? $customer : false;
     }
 
     /**
@@ -190,7 +223,7 @@ class Emartech_Emarsys_Model_Subscriptions
 
         foreach ($subscription->getData() as $key => $value) {
             if (in_array($key, $this->numericFields, true)) {
-                $value = (int) $value;
+                $value = (int)$value;
             }
             $returnArray[$key] = $value;
         }
