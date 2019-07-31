@@ -175,7 +175,7 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
      */
     private function _initCollection()
     {
-        $this->_productCollection = Mage::getModel('catalog/product')->getCollection();
+        $this->_productCollection = Mage::getResourceModel('emartech_emarsys/product_collection');
 
         return $this;
     }
