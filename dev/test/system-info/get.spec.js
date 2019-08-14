@@ -5,7 +5,7 @@ describe('SystemInfo endpoint', function() {
     const expectedInfo = {
       magento_version: '1.9.3.10',
       magento_edition: 'Community',
-      php_version: '7.2.10'
+      php_version: '7.0.33'
     };
 
     const info = await this.magentoApi.execute('systeminfo', 'get');

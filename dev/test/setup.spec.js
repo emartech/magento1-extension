@@ -8,7 +8,6 @@ const sinonChai = require('sinon-chai');
 const knex = require('knex');
 const DbCleaner = require('./db-cleaner');
 const MagentoApiClient = require('@emartech/magento2-api');
-const { productFactory } = require('./factories/products');
 const MagentoXmlRpcApiClient = require('./rpc');
 
 chai.use(chaiString);
@@ -26,42 +25,6 @@ const createCustomer = (xmlRpcApi, db) => async customer => {
     .first();
 
   return Object.assign({}, customer, { entityId });
-};
-
-const createProduct = magentoApi => async product => {
-  await magentoApi.post({ path: '/index.php/rest/V1/products', payload: { product } });
-  return product;
-};
-
-const deleteProduct = magentoApi => async product => {
-  await magentoApi.delete({ path: `/index.php/rest/V1/products/${product.sku}` });
-  return product;
-};
-
-const createCategory = magentoApi => async category => {
-  try {
-    return await magentoApi.createCategory(category);
-  } catch (error) {
-    throw error;
-  }
-};
-
-const deleteCategory = magentoApi => async categoryId => {
-  return await magentoApi.deleteCategory(categoryId);
-};
-
-const setCurrencyConfig = async db => {
-  await db('core_config_data')
-    .where({ path: 'currency/options/default' })
-    .update({ value: 'UGX' });
-  await db('core_config_data')
-    .where({ path: 'currency/options/allow' })
-    .update({ value: 'USD,UGX' });
-  await db('directory_currency_rate').insert({
-    currency_from: 'USD',
-    currency_to: 'UGX',
-    rate: '2'
-  });
 };
 
 const setDefaultConfig = magentoApi => async websiteId => {
@@ -141,16 +104,9 @@ before(async function() {
   this.clearStoreSettings = clearStoreSettings(this.magentoApi);
   this.setDefaultStoreSettings = setDefaultStoreSettings(this.magentoApi);
   this.setDefaultStoreSettings(1);
-  // await this.magentoApi.setDefaultConfig(1);
-  //
-  // await setCurrencyConfig(this.db);
-  //
+
   if (!process.env.QUICK_TEST) {
     this.createCustomer = createCustomer(this.xmlRpcApi, this.db);
-    //   this.createProduct = createProduct(this.magentoApi);
-    //   this.deleteProduct = deleteProduct(this.magentoApi);
-    //   this.createCategory = createCategory(this.magentoApi);
-    //   this.deleteCategory = deleteCategory(this.magentoApi);
 
     try {
       this.customer = await this.createCustomer({
@@ -166,54 +122,8 @@ before(async function() {
     } catch (e) {
       console.log('error', e);
     }
-
-    // const { parentIds, childIds } = await createCategories(this.createCategory);
-    // this.createdParentCategoryIds = parentIds;
-
-    // this.product = await this.createProduct(productFactory({}));
-    // this.storedProductsForProductSync = [];
-    // const productsForProductSync = [
-    //   productFactory({
-    //     sku: 'PRODUCT-SYNC-SKU',
-    //     name: 'Product For Product Sync',
-    //     custom_attributes: [
-    //       {
-    //         attribute_code: 'description',
-    //         value: 'Default products description'
-    //       },
-    //       {
-    //         attribute_code: 'category_ids',
-    //         value: [parentIds[1].toString(), childIds[0].toString()]
-    //       }
-    //     ]
-    //   })
-    // ];
-    // for (const productForProductSync of productsForProductSync) {
-    //   const result = await this.createProduct(productForProductSync);
-    //   this.storedProductsForProductSync.push(result);
-    // }
   }
 });
-
-const createCategories = async function(createCategory) {
-  const parent = await createCategory({
-    parent_id: 2,
-    name: 'Parent category',
-    is_active: true
-  });
-  const child = await createCategory({
-    parent_id: parent.id,
-    name: 'Child category',
-    is_active: true
-  });
-  const simple = await createCategory({
-    parent_id: 2,
-    name: 'Simple category',
-    is_active: true
-  });
-
-  return { parentIds: [parent.id, simple.id], childIds: [child.id] };
-};
 
 beforeEach(async function() {
   this.sinon = sinon;
