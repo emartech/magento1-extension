@@ -464,47 +464,6 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     }
 
     /**
-     * @param int  $productId
-     * @param int  $storeId
-     * @param bool $getSpecial
-     *
-     * @return int | float
-     */
-    private function _handlePrice($productId, $storeId, $getSpecial = true)
-    {
-        $price = $this->_getStoreData($productId, $storeId, 'price');
-        $specialPrice = 0;
-        if ($getSpecial) {
-            $specialPrice = $this->_getStoreData($productId, $storeId, 'special_price');
-        }
-
-        if ($specialPrice) {
-            $specialFromDate = $this->_getStoreData($productId, $storeId, 'special_from_date');
-            $specialToDate = $this->_getStoreData($productId, $storeId, 'special_to_date');
-
-            if ($specialFromDate) {
-                $specialFromDate = strtotime($specialFromDate);
-            } else {
-                $specialFromDate = false;
-            }
-
-            if ($specialToDate) {
-                $specialToDate = strtotime($specialToDate);
-            } else {
-                $specialToDate = false;
-            }
-
-            if (($specialFromDate === false || $specialFromDate <= time()) &&
-                ($specialToDate === false || $specialToDate >= time())
-            ) {
-                $price = $specialPrice;
-            }
-        }
-
-        return $price;
-    }
-
-    /**
      * @param int $storeId
      *
      * @return string
