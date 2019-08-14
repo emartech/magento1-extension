@@ -141,6 +141,7 @@ $ make test
 * Commit, tag and push with tags.
 * On **GitHub -> Releases** choose **Draft new release**
 * Create the release and upload the package tar file by attaching it to the release.
+* Change the version in the `LATEST_MAGENTO_MODULE_VERSIONS` environment variable on `ems-shopify-app-conn` and `ems-shopify-app-conn-staging`
 
 ## Codeship env
 * [Install](https://documentation.codeship.com/pro/jet-cli/installation/) `jet`
