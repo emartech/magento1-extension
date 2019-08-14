@@ -3,7 +3,7 @@ db:
   cached: true
   encrypted_env_file: codeship.env.encrypted
 magento1-test.local:
-  image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
+  image: emarsys/ems-integration-magento-sampledata:1.9.3ce
   container_name: magento1-test.local
   depends_on:
     - db
@@ -18,7 +18,7 @@ magento1-test.local:
   encrypted_env_file: codeship.env.encrypted
   dockercfg_service: dockercfg-generator
 magento-static:
-  image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
+  image: emarsys/ems-integration-magento-sampledata:1.9.3ce
   container_name: magento-static
   volumes:
     - ./dev/setup:/opt/emartech/setup

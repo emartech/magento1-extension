@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   magento-test:
-    image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
+    image: emarsys/ems-integration-magento-sampledata:1.9.3ce
     ports:
       - "8887:80"
     links:
@@ -20,7 +20,7 @@ services:
       - ./setup:/opt/emartech/setup
     command: ["/opt/emartech/wait-for-it.sh", "db:3306", "--timeout=30", "--strict", "--", "/opt/emartech/init"]
   magento-dev:
-    image: eu.gcr.io/ems-plugins/magento-sampledata:1.9.3
+    image: emarsys/ems-integration-magento-sampledata:1.9.3ce
     ports:
       - "8886:80"
     links:
