@@ -107,6 +107,7 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
             ->_handleAttributes()
             ->_setWhere()
             ->_setOrder();
+
         $this->_productCollection->load();
 
         $lastPageNumber = ceil($this->_numberOfItems / $pageSize);
@@ -175,7 +176,8 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
      */
     private function _initCollection()
     {
-        $this->_productCollection = Mage::getResourceModel('emartech_emarsys/product_collection');
+        $this->_productCollection = Mage::getResourceModel('emartech_emarsys/product_collection')
+            ->addFinalPrice();
 
         return $this;
     }
@@ -363,15 +365,22 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
         foreach ($this->_storeIds as $storeId => $storeObject) {
             $productId = (int)$product->getId();
 
+            $price = (float)$this->_handlePrice($productId, $storeId);
+            $displayPrice = (float)$this->_getDisplayPrice($price, $storeObject);
+            $originalPrice = (float)$this->_handlePrice($productId, $storeId, false);
+            $originalDisplayPrice = (float)$this->_getDisplayPrice($originalPrice, $storeObject);
+
             $returnArray[] = [
-                'store_id'      => $storeId,
-                'status'        => (int) $this->_getStoreData($productId, $storeId, 'status'),
-                'description'   => $this->_getStoreData($productId, $storeId, 'description'),
-                'link'          => $this->_handleLink($productId, $storeObject),
-                'name'          => $this->_getStoreData($productId, $storeId, 'name'),
-                'price'         => (float)$this->_handlePrice($productId, $storeId),
-                'display_price' => (float)$this->_handleDisplayPrice($product, $storeObject),
-                'currency_code' => $this->_getCurrencyCode($storeObject),
+                'store_id'              => $storeId,
+                'status'                => (int)$this->_getStoreData($productId, $storeId, 'status'),
+                'description'           => $this->_getStoreData($productId, $storeId, 'description'),
+                'link'                  => $this->_handleLink($productId, $storeObject),
+                'name'                  => $this->_getStoreData($productId, $storeId, 'name'),
+                'price'                 => $price,
+                'display_price'         => $displayPrice,
+                'orignal_price'         => $originalPrice,
+                'orignal_display_price' => $originalDisplayPrice,
+                'currency_code'         => $this->_getCurrencyCode($storeObject),
             ];
         }
 
@@ -435,22 +444,16 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     }
 
     /**
-     * @param Mage_Catalog_Model_Product $product
-     * @param Mage_Core_Model_Store      $store
+     * @param float                 $price
+     * @param Mage_Core_Model_Store $store
      *
      * @return int | float
      */
-    private function _handleDisplayPrice($product, $store)
+    private function _getDisplayPrice($price, $store)
     {
-        $price = $this->_getStoreData($product->getId(), $store->getId(), 'price');
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $product->setPrice($price);
-        $price = $product->getFinalPrice();
-
         if ($this->_getCurrencyCode($store) !== $store->getBaseCurrencyCode()) {
             try {
-                $tmp = $store->getBaseCurrency()->convert($price, $store->getCurrentCurrencyCode());
+                $tmp = (float)$store->getBaseCurrency()->convert($price, $store->getCurrentCurrencyCode());
                 $price = $tmp;
             } catch (\Exception $e) {
                 Mage::logException($e);
@@ -461,15 +464,19 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
     }
 
     /**
-     * @param int $productId
-     * @param int $storeId
+     * @param int  $productId
+     * @param int  $storeId
+     * @param bool $getSpecial
      *
      * @return int | float
      */
-    private function _handlePrice($productId, $storeId)
+    private function _handlePrice($productId, $storeId, $getSpecial = true)
     {
         $price = $this->_getStoreData($productId, $storeId, 'price');
-        $specialPrice = $this->_getStoreData($productId, $storeId, 'special_price');
+        $specialPrice = 0;
+        if ($getSpecial) {
+            $specialPrice = $this->_getStoreData($productId, $storeId, 'special_price');
+        }
 
         if ($specialPrice) {
             $specialFromDate = $this->_getStoreData($productId, $storeId, 'special_from_date');
