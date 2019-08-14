@@ -27,6 +27,15 @@ const createCustomer = (xmlRpcApi, db) => async customer => {
   return Object.assign({}, customer, { entityId });
 };
 
+const setSpecialPrice = xmlRpcApi => async ({ sku, specialPrice }) => {
+  return await xmlRpcApi.execute('catalogProduct', 'setSpecialPrice', {
+    id: sku,
+    specialPrice,
+    from: new Date(2001, 1, 1),
+    to: new Date(2048, 1, 1)
+  });
+};
+
 const setDefaultConfig = magentoApi => async websiteId => {
   return await magentoApi.execute('config', 'set', {
     websiteId,
@@ -107,6 +116,7 @@ before(async function() {
 
   if (!process.env.QUICK_TEST) {
     this.createCustomer = createCustomer(this.xmlRpcApi, this.db);
+    this.setSpecialPrice = setSpecialPrice(this.xmlRpcApi);
 
     try {
       this.customer = await this.createCustomer({
