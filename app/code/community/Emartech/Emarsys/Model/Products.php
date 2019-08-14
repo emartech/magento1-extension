@@ -365,9 +365,9 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
         foreach ($this->_storeIds as $storeId => $storeObject) {
             $productId = (int)$product->getId();
 
-            $price = (float)$this->_handlePrice($productId, $storeId);
+            $price = (float)$product->getFinalPrice();
             $displayPrice = (float)$this->_getDisplayPrice($price, $storeObject);
-            $originalPrice = (float)$this->_handlePrice($productId, $storeId, false);
+            $originalPrice = (float)$product->getPrice();
             $originalDisplayPrice = (float)$this->_getDisplayPrice($originalPrice, $storeObject);
 
             $returnArray[] = [
