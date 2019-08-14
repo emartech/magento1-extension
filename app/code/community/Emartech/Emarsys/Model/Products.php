@@ -378,8 +378,8 @@ class Emartech_Emarsys_Model_Products extends Emartech_Emarsys_Model_Abstract_Ba
                 'name'                  => $this->_getStoreData($productId, $storeId, 'name'),
                 'price'                 => $price,
                 'display_price'         => $displayPrice,
-                'orignal_price'         => $originalPrice,
-                'orignal_display_price' => $originalDisplayPrice,
+                'original_price'         => $originalPrice,
+                'original_display_price' => $originalDisplayPrice,
                 'currency_code'         => $this->_getCurrencyCode($storeObject),
             ];
         }
