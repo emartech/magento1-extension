@@ -81,7 +81,7 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
             $connectToken = [];
         }
 
-        if (array_key_exists('token', $connectToken)) {
+        if ($connectToken && array_key_exists('token', $connectToken)) {
             $token = $connectToken['token'];
         } else {
             $token = $this->_getTokenFromConfig();
