@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright ©2018 Itegration Ltd., Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -9,7 +10,7 @@
  */
 class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
 {
-    CONST XML_PATH_CONNECTOR_TOKEN = 'emartech_emarsys/general/connecttoken';
+    const XML_PATH_CONNECTOR_TOKEN = 'emartech_emarsys/general/connecttoken';
     const VALID_AUTHORIZATION_TYPE = 'Bearer';
     const MAGENTO_VERSION          = 1;
 
@@ -57,7 +58,7 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
     {
         return [
             'hostname'        => $this->_getBaseUrl(),
-            'token'           => $this->_getTokenFromConfig(),
+            'token'           => $this->_getStoredToken(),
             'magento_version' => self::MAGENTO_VERSION,
         ];
     }
@@ -71,27 +72,47 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @return string
+     * @param string $tokenFromConfig
+     *
+     * @return bool
      */
-    private function _getOldToken()
+    private function _tokenWasStoredInEncodedFormat($tokenFromConfig)
     {
         try {
-            $connectToken = json_decode(base64_decode($this->_getTokenFromConfig()), true);
+            return $tokenFromConfig &&
+                base64_decode($tokenFromConfig) !== false &&
+                json_decode(base64_decode($tokenFromConfig), true) !== null;
         } catch (\Exception $e) {
-            $connectToken = [];
+            return false;
         }
+    }
 
-        if (array_key_exists('token', $connectToken)) {
-            $token = $connectToken['token'];
+    /**
+     * @return string
+     */
+    private function _getAuthTokenFromEncodedEmarsysConnectToken($encodedToken)
+    {
+        $emarsysConnectToken = json_decode(base64_decode($encodedToken), true);
+
+        if (is_array($emarsysConnectToken) && array_key_exists('token', $emarsysConnectToken)) return $emarsysConnectToken['token'];
+
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    private function _getStoredToken()
+    {
+        $tokenFromConfig = $this->_getTokenFromConfig();
+
+        if (!$tokenFromConfig) return null;
+
+        if ($this->_tokenWasStoredInEncodedFormat($tokenFromConfig)) {
+            return $this->_getAuthTokenFromEncodedEmarsysConnectToken($tokenFromConfig);
         } else {
-            $token = $this->_getTokenFromConfig();
+            return $tokenFromConfig;
         }
-
-        if (!$token) {
-            $token = $this->_generateApiToken();
-        }
-
-        return $token;
     }
 
     /**
@@ -157,7 +178,11 @@ class Emartech_Emarsys_Helper_Connector extends Mage_Core_Helper_Abstract
      */
     public function refreshToken()
     {
-        return $this->_getOldToken();
+        $authTokenStoredInConfig = $this->_getStoredToken();
+
+        if ($authTokenStoredInConfig) return $authTokenStoredInConfig;
+
+        return $this->_generateApiToken();
     }
 
     /**
